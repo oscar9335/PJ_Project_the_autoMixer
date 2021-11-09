@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_nav_main"
+    app:startDestination="@id/home_page">
+    <fragment
+        android:id="@+id/home_page"
+        android:name="com.example.project_prototype.home_page"
+        android:label="fragment_home_page"
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_home_page_to_audio_recoder"
+            app:destination="@id/audio_recoder" />
+        <action
+            android:id="@+id/action_home_page_to_video_recorder"
+            app:destination="@id/video_recorder" />
+    </fragment>
+    <fragment
+        android:id="@+id/audio_recoder"
+        android:name="com.example.project_prototype.audio_recoder"
+        android:label="fragment_audio_recoder"
+        tools:layout="@layout/fragment_audio_recoder" />
+    <fragment
+        android:id="@+id/video_recorder"
+        android:name="com.example.project_prototype.video_recorder"
+        android:label="fragment_video_recorder"
+        tools:layout="@layout/fragment_video_recorder" />
+</navigation>
