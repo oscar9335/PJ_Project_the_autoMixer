@@ -1,18 +1,30 @@
 package com.example.project_prototype;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -20,8 +32,22 @@ import java.util.Locale;
 
 public class audio_recoder extends Fragment implements View.OnClickListener {
 
+    private int PERMISSION_CODE = 21 ;  //random individual number
+    private String recordPermission = Manifest.permission.RECORD_AUDIO;
+
     private ImageButton audio_record_button;
+    private Chronometer timer;
     private String recordFile;
+    private TextView textView3;
+
+    private Button for8k;
+    private Button for16k;
+
+    private boolean isRecording = false;
+
+    private MediaRecorder mediaRecorder;
+
+    private int samplerate = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,36 +60,71 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        audio_record_button = view.findViewById(R.id.audio_record_button);
+        textView3 = view.findViewById(R.id.textView3);
 
+        timer = view.findViewById(R.id.record_timer);
+
+        audio_record_button = view.findViewById(R.id.audio_record_button);
         audio_record_button.setOnClickListener(this);
+
+        for8k = view.findViewById(R.id.for8k);
+        for8k.setOnClickListener(this);
+
+        for16k = view.findViewById(R.id.for16k);
+        for16k.setOnClickListener(this);
+
+
     }
+
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.audio_record_button:
-                /*
+
                 if(isRecording){
                     //stop
                     stopRecording();
-                    recordbutton.setImageDrawable(getResources().getDrawable(R.drawable.record_button));
+                    audio_record_button.setImageDrawable(getResources().getDrawable(R.drawable.recordbutton));
+                    for16k.setBackgroundColor(0xFF00FFFF);
+                    for8k.setBackgroundColor(0xFF00FFFF);
                     isRecording = false;
                 }
                 else{
                     if(checkPermission()) {
+                        //if isRecording is false then we can call  startRecording();
                         //start
+                        //textView3.setText("debug");
                         startRecording();
-                        recordbutton.setImageDrawable(getResources().getDrawable(R.drawable.stop_button));
+                        audio_record_button.setImageDrawable(getResources().getDrawable(R.drawable.recordingpng));
                         isRecording = true;
                     }
                 }
-                */
+                break;
+            case R.id.for8k:
+                if(isRecording == false) {
+                    //can change the frame rate
+                    samplerate = 8000;
+                    for16k.setBackgroundColor(0xFFCCCCCC);
+                }
+                break;
+            case R.id.for16k:
+                if(isRecording == false) {
+                    //can change the frame rate
+                    samplerate = 64000;
+                    for8k.setBackgroundColor(0xFFCCCCCC);
+                }
                 break;
         }
     }
 
+
+
     private void startRecording(){
+
+        timer.setBase(SystemClock.elapsedRealtime());
+        timer.start();
 
         String recordPath = getActivity().getExternalFilesDir("/").getAbsolutePath();
 
@@ -71,10 +132,46 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
         Date now = new Date();
         recordFile = "Recording_" + formatter.format(now) + ".3gp";
 
-        MediaRecorder mediaRecorder = new MediaRecorder();
+        mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setOutputFile(recordPath + "/" + recordFile);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC); //AAC more flexible
+
+        mediaRecorder.setAudioSamplingRate(samplerate);
+
+
+
+
+        //public void setAudioSamplingRate (int samplingRate)
+        //sampling rate really depends on the format for the audio recording as well as the capabilities of the platform
+        //AAC 8k to 96kHz
+
+        try {
+            mediaRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mediaRecorder.start();
     }
+
+    private void stopRecording() {
+        timer.stop();
+        mediaRecorder.stop();
+        mediaRecorder.release();
+        mediaRecorder = null;
+    }
+
+    private boolean checkPermission() {
+        if(ActivityCompat.checkSelfPermission(getContext(), recordPermission)  == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{recordPermission}, PERMISSION_CODE );
+            return false;
+        }
+    }
+
+
 }
