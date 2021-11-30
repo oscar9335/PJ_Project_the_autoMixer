@@ -2,7 +2,6 @@ package com.example.project_prototype;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 
@@ -18,11 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,6 +37,10 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
 
     private Button for8k;
     private Button for16k;
+    private Button for22_05k;
+    private Button for44_1k;
+    private Button for48k;
+
 
     private boolean isRecording = false;
 
@@ -73,7 +72,14 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
         for16k = view.findViewById(R.id.for16k);
         for16k.setOnClickListener(this);
 
+        for22_05k = view.findViewById(R.id.for22_05k);
+        for22_05k.setOnClickListener(this);
 
+        for44_1k = view.findViewById(R.id.for44_1k);
+        for44_1k.setOnClickListener(this);
+
+        for48k = view.findViewById(R.id.for48k);
+        for48k.setOnClickListener(this);
     }
 
 
@@ -87,8 +93,11 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
                     //stop
                     stopRecording();
                     audio_record_button.setImageDrawable(getResources().getDrawable(R.drawable.recordbutton));
-                    for16k.setBackgroundColor(0xFF00FFFF);
                     for8k.setBackgroundColor(0xFF00FFFF);
+                    for16k.setBackgroundColor(0xFF00FFFF);
+                    for22_05k.setBackgroundColor(0xFF00FFFF);
+                    for44_1k.setBackgroundColor(0xFF00FFFF);
+                    for48k.setBackgroundColor(0xFF00FFFF);
                     isRecording = false;
                 }
                 else{
@@ -106,14 +115,66 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
                 if(isRecording == false) {
                     //can change the frame rate
                     samplerate = 8000;
+
+                    for8k.setBackgroundColor(0xFF00FFFF);
+
                     for16k.setBackgroundColor(0xFFCCCCCC);
+                    for22_05k.setBackgroundColor(0xFFCCCCCC);
+                    for44_1k.setBackgroundColor(0xFFCCCCCC);
+                    for48k.setBackgroundColor(0xFFCCCCCC);
                 }
                 break;
             case R.id.for16k:
                 if(isRecording == false) {
                     //can change the frame rate
-                    samplerate = 64000;
+                    samplerate = 16000;
+
+                    for16k.setBackgroundColor(0xFF00FFFF);
+
                     for8k.setBackgroundColor(0xFFCCCCCC);
+                    for22_05k.setBackgroundColor(0xFFCCCCCC);
+                    for44_1k.setBackgroundColor(0xFFCCCCCC);
+                    for48k.setBackgroundColor(0xFFCCCCCC);
+                }
+                break;
+            case R.id.for22_05k:
+                if(isRecording == false) {
+                    //can change the frame rate
+                    samplerate = 22050;
+
+                    for22_05k.setBackgroundColor(0xFF00FFFF);
+
+                    for8k.setBackgroundColor(0xFFCCCCCC);
+                    for16k.setBackgroundColor(0xFFCCCCCC);
+                    for44_1k.setBackgroundColor(0xFFCCCCCC);
+                    for48k.setBackgroundColor(0xFFCCCCCC);
+                }
+                break;
+            case R.id.for44_1k:
+                if(isRecording == false) {
+                    //can change the frame rate
+                    samplerate = 44100;
+
+
+                    for44_1k.setBackgroundColor(0xFF00FFFF);
+
+                    for8k.setBackgroundColor(0xFFCCCCCC);
+                    for16k.setBackgroundColor(0xFFCCCCCC);
+                    for22_05k.setBackgroundColor(0xFFCCCCCC);
+                    for48k.setBackgroundColor(0xFFCCCCCC);
+                }
+                break;
+            case R.id.for48k:
+                if(isRecording == false) {
+                    //can change the frame rate
+                    samplerate = 48000;
+
+                    for48k.setBackgroundColor(0xFF00FFFF);
+
+                    for8k.setBackgroundColor(0xFFCCCCCC);
+                    for16k.setBackgroundColor(0xFFCCCCCC);
+                    for22_05k.setBackgroundColor(0xFFCCCCCC);
+                    for44_1k.setBackgroundColor(0xFFCCCCCC);
                 }
                 break;
         }
