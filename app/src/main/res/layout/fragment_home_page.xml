@@ -8,63 +8,37 @@
     android:id="@+id/home_page">
 
     <ImageButton
-        android:id="@+id/video_mode"
-        android:layout_width="128dp"
-        android:layout_height="116dp"
-
-        android:layout_marginEnd="40dp"
-
-        android:adjustViewBounds="true"
-        android:background="@color/white"
-        android:scaleType="fitXY"
-
-        android:src="@android:drawable/presence_video_busy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.863" />
-
-    <ImageButton
         android:id="@+id/audio_mode"
         android:layout_width="129dp"
         android:layout_height="115dp"
 
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="226dp"
+
+        android:layout_marginBottom="60dp"
         android:adjustViewBounds="true"
         android:background="@color/white"
         android:scaleType="fitXY"
-
         android:src="@android:drawable/presence_audio_busy"
-        app:layout_constraintBottom_toBottomOf="@+id/video_mode"
-        app:layout_constraintEnd_toStartOf="@+id/video_mode"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/video_mode"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="125dp"
         android:layout_height="68dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="480dp"
+        android:layout_marginBottom="16dp"
         android:text="Audio Recoder"
         android:textAlignment="center"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/audio_mode"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintHorizontal_bias="0.419"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="125dp"
-        android:layout_height="68dp"
-        android:layout_marginEnd="40dp"
-        android:text="Video Recoder"
-        android:textAlignment="center"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/video_mode"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
