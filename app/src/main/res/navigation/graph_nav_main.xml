@@ -15,6 +15,12 @@
         <action
             android:id="@+id/action_home_page_to_videoActivity"
             app:destination="@id/videoActivity" />
+        <action
+            android:id="@+id/action_home_page_to_select_file2"
+            app:destination="@id/select_file2" />
+        <action
+            android:id="@+id/action_home_page_to_audio_recorder"
+            app:destination="@id/audio_recorder" />
     </fragment>
     <fragment
         android:id="@+id/audio_recoder"
@@ -26,4 +32,15 @@
         android:name="com.example.project_prototype.VideoActivity"
         android:label="activity_video"
         tools:layout="@layout/activity_video" />
+    <activity
+        android:id="@+id/select_file2"
+        android:name="com.example.project_prototype.select_file"
+        android:label="activity_select_file"
+        tools:layout="@layout/activity_select_file" />
+    <activity
+        android:id="@+id/audio_recorder"
+        android:name="com.example.project_prototype.Audio_recorder"
+        android:label="activity_audio_recorder"
+        tools:layout="@layout/activity_audio_recorder" />
+
 </navigation>
