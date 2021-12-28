@@ -19,6 +19,7 @@ public class home_page extends Fragment implements View.OnClickListener{
     private NavController navController;  // for the use of
 
     private ImageButton audio_mode_button;
+    private ImageButton video_mode_button;
 
 
     @Override
@@ -35,8 +36,10 @@ public class home_page extends Fragment implements View.OnClickListener{
         navController = Navigation.findNavController(view);
 
         audio_mode_button =  view.findViewById(R.id.audio_mode);
+        video_mode_button =  view.findViewById(R.id.video_mode);
 
         audio_mode_button.setOnClickListener(this);
+        video_mode_button.setOnClickListener(this);
 
 
     }
@@ -46,6 +49,9 @@ public class home_page extends Fragment implements View.OnClickListener{
         switch (view.getId()){
             case R.id.audio_mode:
                 navController.navigate(R.id.action_home_page_to_audio_recoder);
+                break;
+            case R.id.video_mode:
+                navController.navigate(R.id.action_home_page_to_videoActivity);
                 break;
         }
     }

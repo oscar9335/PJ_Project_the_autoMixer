@@ -12,10 +12,18 @@
         <action
             android:id="@+id/action_home_page_to_audio_recoder"
             app:destination="@id/audio_recoder" />
+        <action
+            android:id="@+id/action_home_page_to_videoActivity"
+            app:destination="@id/videoActivity" />
     </fragment>
     <fragment
         android:id="@+id/audio_recoder"
         android:name="com.example.project_prototype.audio_recoder"
         android:label="fragment_audio_recoder"
         tools:layout="@layout/fragment_audio_recoder" />
+    <activity
+        android:id="@+id/videoActivity"
+        android:name="com.example.project_prototype.VideoActivity"
+        android:label="activity_video"
+        tools:layout="@layout/activity_video" />
 </navigation>
