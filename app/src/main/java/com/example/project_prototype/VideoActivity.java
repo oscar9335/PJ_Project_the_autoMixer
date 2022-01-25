@@ -14,6 +14,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class VideoActivity extends AppCompatActivity {
 
     private static  int CAMERA_PERMISSION_CODE = 100;
@@ -55,13 +59,28 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private void recordVideo() {
+        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+
         startActivityForResult(intent, VIDEO_RECORD_CODE);
+        Date now_start = new Date();
+        System.out.println("start: " + formatter_start.format(now_start));
+
+
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+
         super.onActivityResult(requestCode, resultCode, data);
+        Date now_end = new Date();
+        System.out.println("end: " + formatter_end.format(now_end));
+
         if (requestCode == VIDEO_RECORD_CODE) {
             if(resultCode == RESULT_OK) {
                 videoPath = data.getData();

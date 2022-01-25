@@ -56,7 +56,7 @@ public class home_page extends Fragment implements View.OnClickListener{
                 navController.navigate(R.id.action_home_page_to_audio_recorder);
                 break;
             case R.id.video_mode:
-                navController.navigate(R.id.action_home_page_to_videoActivity);
+                navController.navigate(R.id.action_home_page_to_between_video22);
                 break;
             case R.id.file:
                 navController.navigate(R.id.action_home_page_to_select_file2);

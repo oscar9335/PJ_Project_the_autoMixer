@@ -7,8 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Button;
 import android.widget.Toast;
+
+
+import java.io.File;
 
 public class select_file extends AppCompatActivity {
 
@@ -68,4 +72,6 @@ public class select_file extends AppCompatActivity {
             Toast.makeText(context, "取消選取檔案!", Toast.LENGTH_LONG).show();
         }
     }
+
+
 }

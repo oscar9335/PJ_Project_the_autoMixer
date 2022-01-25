@@ -19,6 +19,7 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +33,10 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
 
     private ImageButton audio_record_button;
     private Chronometer timer;
+
     private String recordFile;
+    private FileWriter time_imformation;
+
     private TextView textView3;
 
     private Button for8k;
@@ -192,6 +196,8 @@ public class audio_recoder extends Fragment implements View.OnClickListener {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
         Date now = new Date();
         recordFile = "Recording_" + formatter.format(now) + ".3gp";
+
+
 
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

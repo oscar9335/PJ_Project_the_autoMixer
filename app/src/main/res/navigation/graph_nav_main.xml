@@ -10,28 +10,15 @@
         android:label="fragment_home_page"
         tools:layout="@layout/fragment_home_page" >
         <action
-            android:id="@+id/action_home_page_to_audio_recoder"
-            app:destination="@id/audio_recoder" />
-        <action
-            android:id="@+id/action_home_page_to_videoActivity"
-            app:destination="@id/videoActivity" />
-        <action
             android:id="@+id/action_home_page_to_select_file2"
             app:destination="@id/select_file2" />
         <action
             android:id="@+id/action_home_page_to_audio_recorder"
             app:destination="@id/audio_recorder" />
+        <action
+            android:id="@+id/action_home_page_to_between_video22"
+            app:destination="@id/between_video2" />
     </fragment>
-    <fragment
-        android:id="@+id/audio_recoder"
-        android:name="com.example.project_prototype.audio_recoder"
-        android:label="fragment_audio_recoder"
-        tools:layout="@layout/fragment_audio_recoder" />
-    <activity
-        android:id="@+id/videoActivity"
-        android:name="com.example.project_prototype.VideoActivity"
-        android:label="activity_video"
-        tools:layout="@layout/activity_video" />
     <activity
         android:id="@+id/select_file2"
         android:name="com.example.project_prototype.select_file"
@@ -42,5 +29,19 @@
         android:name="com.example.project_prototype.Audio_recorder"
         android:label="activity_audio_recorder"
         tools:layout="@layout/activity_audio_recorder" />
+    <activity
+        android:id="@+id/cameraActivity"
+        android:name="com.example.project_prototype.CameraActivity"
+        android:label="activity_camera"
+        tools:layout="@layout/activity_camera" />
+    <fragment
+        android:id="@+id/between_video2"
+        android:name="com.example.project_prototype.between_video"
+        android:label="fragment_between_video"
+        tools:layout="@layout/fragment_between_video" >
+        <action
+            android:id="@+id/action_between_video2_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
 
 </navigation>

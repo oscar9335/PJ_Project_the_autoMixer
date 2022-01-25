@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +41,7 @@ public class Audio_recorder extends AppCompatActivity {
 
     private String outputFile = null;
 
+
     private ImageButton recorder_button;
     private TextView textView4;
 
@@ -54,6 +56,12 @@ public class Audio_recorder extends AppCompatActivity {
     private int samplerate = 8000;
     private String samplerate_show = "8000\n";
 
+    private TextView see_time_start;
+    private TextView see_time_end;
+
+    private String outputFile_timeinfo = null;
+    private FileWriter time_imformation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,10 @@ public class Audio_recorder extends AppCompatActivity {
 
         recorder_button = (ImageButton) findViewById(R.id.recorder_button);
         textView4 = (TextView) findViewById(R.id.textView4);
+
+        see_time_start = (TextView) findViewById(R.id.see_time_start);
+        see_time_end = (TextView) findViewById(R.id.see_time_end);
+
         timer = (Chronometer) findViewById(R.id.record_timer2);
         for8K = (Button) findViewById((R.id.for8k2)) ;
         for16K = (Button) findViewById((R.id.for16k2)) ;
@@ -126,7 +138,34 @@ public class Audio_recorder extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
         Date now = new Date();
 
-        outputFile = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+        File audio = new File(getExternalFilesDir("/").getAbsolutePath(), "Audio");
+        if (!audio.exists()) {
+            audio.mkdirs();
+        }
+
+        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+        //the file name
+        outputFile_timeinfo = "audio_time_info" + formatter.format(now) + ".txt";
+        //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
+
+
+        try {
+            File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Audio_time_info");
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File filepath = new File(root, outputFile_timeinfo);
+            time_imformation = new FileWriter(filepath);
+
+            //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
         //outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/" + formatter.format(now) + ".3gp";
         //outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
 
@@ -160,11 +199,28 @@ public class Audio_recorder extends AppCompatActivity {
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
 
+        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+
         try {
+            Date now_start = new Date();
+            see_time_start.setText(formatter_start.format(now_start));
+
+            try {
+                //time_imformation.append(sBody);
+                time_imformation.write(formatter_start.format(now_start)+"\n");
+                time_imformation.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             myAudioRecorder.start();
+
         } catch(IllegalStateException e){
             e.printStackTrace();
         }
+
+
+
         isRecording = true;
         textView4.setText(samplerate_show + "recording");
     }
@@ -173,8 +229,20 @@ public class Audio_recorder extends AppCompatActivity {
 
         if(myAudioRecorder != null) {
             timer.stop();
+            SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
             try {
                 myAudioRecorder.stop();
+                Date now_end = new Date();
+                see_time_end.setText(formatter_end.format(now_end));
+
+                try {
+                    time_imformation.write(formatter_end.format(now_end) + "\n");
+                    time_imformation.flush();
+                    time_imformation.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             } catch (IllegalStateException e) {
                 // handle cleanup here
                 e.printStackTrace();
