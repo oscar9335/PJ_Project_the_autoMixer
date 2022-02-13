@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +83,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
         }, getExecutor());
 
+        //high project name section
+        getSupportActionBar().hide();
+        //full screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+
+
     }
 
     Executor getExecutor() {
@@ -90,18 +100,23 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @SuppressLint("RestrictedApi")
     private void startCameraX(ProcessCameraProvider cameraProvider) {
+
+        int rotation = previewView.getDisplay().getRotation();
+
         cameraProvider.unbindAll();
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
         Preview preview = new Preview.Builder()
+                .setTargetRotation(rotation)
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
 
         // Video capture use case
         videoCapture = new VideoCapture.Builder()
+                .setTargetRotation(rotation)
                 .build();
 
         //bind to lifecycle:
@@ -127,7 +142,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 
                     Date time2 = new Date();
-                    SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+                    SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
                     try {
                         time_imformation.write(formatter_end.format(time2) + "\n");
                         time_imformation.flush();
@@ -196,7 +211,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 for_time = new between_video();
 
                 Date time = new Date();
-                SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+                SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
 
                 //tart_time.setText(formatter_start.format(time));
                 try {

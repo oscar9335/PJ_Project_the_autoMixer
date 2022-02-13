@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+
+            <!--邊框顏色、粗細-->
+            <stroke
+                android:width="3dp"
+               android:color="#000000" />
+
+            <!--圓角-->
+            <corners android:radius="10dp" />
+
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+        </shape>
+    </item>
+</selector>

@@ -199,7 +199,7 @@ public class Audio_recorder extends AppCompatActivity {
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
 
-        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
 
         try {
             Date now_start = new Date();
@@ -229,7 +229,7 @@ public class Audio_recorder extends AppCompatActivity {
 
         if(myAudioRecorder != null) {
             timer.stop();
-            SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_sss", Locale.TAIWAN);
+            SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
             try {
                 myAudioRecorder.stop();
                 Date now_end = new Date();
