@@ -23,6 +23,8 @@ public class home_page extends Fragment implements View.OnClickListener{
     private ImageButton video_mode_button;
     private Button file_select;
 
+    private Button testbt;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +47,9 @@ public class home_page extends Fragment implements View.OnClickListener{
         video_mode_button.setOnClickListener(this);
         file_select.setOnClickListener(this);
 
+        testbt = view.findViewById(R.id.testbt);
+        testbt.setOnClickListener(this);
+
 
 
     }
@@ -56,10 +61,13 @@ public class home_page extends Fragment implements View.OnClickListener{
                 navController.navigate(R.id.action_home_page_to_audio_recorder);
                 break;
             case R.id.video_mode:
-                navController.navigate(R.id.action_home_page_to_between_video22);
+                navController.navigate(R.id.action_home_page_to_cameraActivity3);
                 break;
             case R.id.file:
-                navController.navigate(R.id.action_home_page_to_select_file2);
+                navController.navigate(R.id.action_home_page_to_room);
+                break;
+            case R.id.testbt:
+                navController.navigate(R.id.action_home_page_to_room);
                 break;
         }
     }

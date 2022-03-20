@@ -1,5 +1,7 @@
 package com.example.project_prototype;
 
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +13,13 @@ import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -42,21 +48,29 @@ import java.util.concurrent.Executor;
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    PreviewView previewView;
+    private PreviewView previewView;
     private VideoCapture videoCapture;
     private Button bRecord;
 
-    private boolean recording = false;
+    private int rotation;
 
-    private String outputFile = null;
+    private boolean recording = false;
 
     public between_video for_time;
 
-    public TextView start_time;
-    public TextView end_time;
+    public String start_time = null;
+    public String end_time = null;
+
+    private String outputFile = null;
+    private String video_name = null;
 
     private String outputFile_timeinfo = null;
+    private String video_info_path;
+
     private FileWriter time_imformation;
+
+    //private ProcessCameraProvider mCameraProvider;
+
 
 
 
@@ -69,8 +83,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         bRecord = findViewById(R.id.bRecord);
         bRecord.setOnClickListener(this);
 
-        start_time = findViewById(R.id.start_time_video);
-        end_time = findViewById(R.id.end_time_video);
 
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -78,6 +90,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                 startCameraX(cameraProvider);
+
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -101,24 +114,35 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @SuppressLint("RestrictedApi")
     private void startCameraX(ProcessCameraProvider cameraProvider) {
 
-        int rotation = previewView.getDisplay().getRotation();
+        //rotation = previewView.getDisplay().getRotation();
 
-        cameraProvider.unbindAll();
+
+//        CameraSelector cameraSelector = new CameraSelector.Builder()
+//                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+//                .build();
+
         CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
+
+//        Preview preview = new Preview.Builder()
+//                .setTargetRotation(rotation)
+//                .build();
+
         Preview preview = new Preview.Builder()
-                .setTargetRotation(rotation)
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
 
         // Video capture use case
+//        videoCapture = new VideoCapture.Builder()
+//                .setTargetRotation(rotation)
+//                .build();
         videoCapture = new VideoCapture.Builder()
-                .setTargetRotation(rotation)
                 .build();
 
+
+        cameraProvider.unbindAll();
         //bind to lifecycle:
         cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview,videoCapture);
 
@@ -140,7 +164,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     videoCapture.stopRecording();
 
 
-
                     Date time2 = new Date();
                     SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
                     try {
@@ -150,6 +173,29 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+
+                    //this place ##important##
+                    //send the video_file_name & video_info_name to the front fragment and let the fragment do the upload file job
+                    Bundle bundle = new Bundle();
+                    bundle.putString("video_path",outputFile);
+                    bundle.putString("video_name",video_name);
+                    bundle.putString("video_info_path",video_info_path);
+                    bundle.putString("video_info_name",outputFile_timeinfo);
+
+                    between_video fragment_object = new between_video();
+                    fragment_object.setArguments(bundle);
+
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,fragment_object).commit();
+                    bRecord.setVisibility(View.GONE);
+                    previewView.setVisibility(View.GONE);
+
+//                    Preview preview = new Preview.Builder()
+//                            .setTargetRotation(rotation)
+//                            .build();
+//                    preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
                 }
                 break;
         }
@@ -170,6 +216,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
             Date now = new Date();
             File file = new File( getExternalFilesDir("Video").getAbsolutePath() + "/" + formatter.format(now) + ".mp4");
+            outputFile = file.getPath();
+            video_name = formatter.format(now) + ".mp4";
 
             outputFile_timeinfo = "video_time_info" + formatter.format(now) + ".txt";
 
@@ -179,6 +227,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     root.mkdirs();
                 }
                 File filepath = new File(root, outputFile_timeinfo);
+                video_info_path = filepath.getPath();
+
                 time_imformation = new FileWriter(filepath);
 
                 //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
@@ -218,6 +268,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     //time_imformation.append(sBody);
                     time_imformation.write(formatter_start.format(time)+"\n");
                     time_imformation.flush();
+
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -243,6 +296,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
+
+
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

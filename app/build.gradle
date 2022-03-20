@@ -52,6 +52,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
     implementation 'com.google.firebase:protolite-well-known-types:18.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
     def cameraxVersion = "1.1.0-alpha11"
     //noinspection GradleDependency
@@ -72,6 +74,7 @@ dependencies {
     implementation("com.google.guava:guava:28.0-jre")
 
 
+    //for cameraX
     // CameraX core library using the camera2 implementation
     def camerax_version = "1.0.2"
     // The following line is optional, as the core library is included indirectly by camera-camera2
@@ -85,6 +88,18 @@ dependencies {
     implementation "androidx.camera:camera-view:1.0.0-alpha32"
     // If you want to additionally use the CameraX Extensions library
     implementation "androidx.camera:camera-extensions:1.0.0-alpha32"
+
+
+
+    //for OKhttp
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+        // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+   // implementation("com.squareup.okhttp3:logging-interceptor")
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
 
 
 

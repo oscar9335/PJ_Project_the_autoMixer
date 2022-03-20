@@ -69,17 +69,28 @@
 
     <Button
         android:id="@+id/file"
-        android:layout_width="250dp"
+        android:layout_width="350dp"
         android:layout_height="75dp"
         android:background="@android:color/holo_green_light"
-        
+
+        android:text="Download your masterpice"
         android:textSize="20dp"
-        android:text="Select file to push"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.250" />
+        app:layout_constraintVertical_bias="0.472" />
+
+    <Button
+        android:id="@+id/testbt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

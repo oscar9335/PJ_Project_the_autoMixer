@@ -4,39 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".between_video">
+    tools:context=".between_video"
+    android:id="@+id/video_fragment">
 
 
     <TextView
-        android:id="@+id/start_time_video"
-        android:layout_width="365dp"
-        android:layout_height="37dp"
-        android:text="Start"
-        app:layout_constraintBottom_toTopOf="@+id/end_time_video"
+        android:id="@+id/video_file_name"
+        android:layout_width="357dp"
+        android:layout_height="77dp"
+        android:text="Hello"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/file_upload_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/end_time_video"
-        android:layout_width="364dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="584dp"
-        android:text="END"
+        android:id="@+id/file_upload_status"
+        android:layout_width="369dp"
+        android:layout_height="78dp"
+        android:textSize="25dp"
+        android:layout_marginBottom="472dp"
+        android:text="Hello"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/capture"
-        android:layout_width="146dp"
-        android:layout_height="130dp"
-        android:text="Record"
+        android:id="@+id/upload_bt"
+        android:layout_width="188dp"
+        android:layout_height="140dp"
+        android:textSize="30dp"
+        android:text="Upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.848" />
+
+    <TextView
+        android:id="@+id/okcheck"
+        android:layout_width="89dp"
+        android:layout_height="17dp"
+        android:visibility="gone"
+        android:text="hello"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.431" />
+
+    <Button
+        android:id="@+id/downloadinvideo"
+        android:layout_width="130dp"
+        android:layout_height="80dp"
+        android:text="DOWNLOAD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.550" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
