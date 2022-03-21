@@ -57,6 +57,9 @@ public class between_video extends Fragment implements View.OnClickListener{
     private String roomnumtest = "1";
     private Uri Download_Uri;
 
+    private String roomnumber;
+    private TextView roomcontainer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +70,8 @@ public class between_video extends Fragment implements View.OnClickListener{
         video_name = getArguments().getString("video_name");
         video_info_path = getArguments().getString("video_info_path");
         video_info_name = getArguments().getString("video_info_name");
+        roomnumber = getArguments().getString("the_room_number");
+
 
         return inflater.inflate(R.layout.fragment_between_video, container, false);
 
@@ -89,6 +94,11 @@ public class between_video extends Fragment implements View.OnClickListener{
 
         download = view.findViewById(R.id.downloadinvideo);
         download.setOnClickListener(this);
+
+        roomcontainer = view.findViewById(R.id.room_container_inbetween);
+        roomcontainer.setText(roomnumber);
+
+
 
     }
     @Override
@@ -121,6 +131,7 @@ public class between_video extends Fragment implements View.OnClickListener{
         RequestBody requestBody = new MultipartBody
                 .Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("room_number",roomnumber)
                 .addFormDataPart("video", video_name, RequestBody.create(MediaType.parse(mediaType),f))
                 .addFormDataPart("video_info", video_info_name , RequestBody.create(MediaType.parse(textType),info))
                 .build();

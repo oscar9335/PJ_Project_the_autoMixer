@@ -52,8 +52,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
 
 
 public class Audio_recorder extends AppCompatActivity {
@@ -106,6 +104,8 @@ public class Audio_recorder extends AppCompatActivity {
     private String roomnumtest = "1";
     private Uri Download_Uri;
 
+    private String roomnumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +141,12 @@ public class Audio_recorder extends AppCompatActivity {
 
         askForPermissions();
         checkPermission();
+
+        //receive data from hoom_fragment using SafeArg
+        roomnumber = getIntent().getExtras().getString("pass_room_number_toaudio");
+        System.out.println("Kill me " + roomnumber);
+
+
 
     }
 
@@ -329,6 +335,7 @@ public class Audio_recorder extends AppCompatActivity {
         RequestBody requestBody = new MultipartBody
                 .Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("room_number",roomnumber)
                 .addFormDataPart("audio", audio_filename, RequestBody.create(MediaType.parse(mediaType),f))
                 .addFormDataPart("audio_info", info_filename , RequestBody.create(MediaType.parse(textType),info))
                 .build();
@@ -394,66 +401,9 @@ public class Audio_recorder extends AppCompatActivity {
 
     }
 
-
-//    //download the file from the server with the same room_number(using String type)
-//    private void downloadPost(String url){
-//
-//
-//
-//
-//
-//
-//
-//
-////        OkHttpClient okHttpClient = new OkHttpClient();
-////        String download_url = url + "Download";
-////        Request request = new Request
-////                .Builder()
-////                .url(download_url)
-////                .build();
-////        okHttpClient.newCall(request).enqueue(new Callback() {
-////            @Override
-////            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-////                Toast.makeText(Audio_recorder.this, "Something went wrong:" + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
-////                call.cancel();
-////            }
-////
-////            @Override
-////            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-////
-////
-////                File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Download");
-////                if (!root.exists()) {
-////                    root.mkdirs();
-////                }
-////
-////                File mdownload = new File(root, "Masterpice.mp4");
-////                if (mdownload.exists()) {
-////                    boolean fileDeleted = mdownload.delete();
-////                    Log.v("fileDeleted", fileDeleted + "");
-////                }
-////
-////                boolean fileCreated = mdownload.createNewFile();
-////                BufferedSink sink = Okio.buffer(Okio.sink(mdownload));
-////                sink.writeAll(response.body().source());
-////                sink.close();
-////
-////                //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
-////
-////            }
-////        });
-//
-//
-//    }
-
-
-
-
     private String getMimeType(String path){
-
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-
     }
 
     private void askForPermissions() {

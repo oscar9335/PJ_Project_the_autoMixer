@@ -71,6 +71,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     //private ProcessCameraProvider mCameraProvider;
 
+    private String roomnumber;
 
 
 
@@ -102,6 +103,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
+        //receive data from hoom_fragment using SafeArg
+        roomnumber = getIntent().getExtras().getString("pass_room_number_tovideo");
+        System.out.println("Kill me " + roomnumber);
 
 
     }
@@ -182,6 +186,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     bundle.putString("video_name",video_name);
                     bundle.putString("video_info_path",video_info_path);
                     bundle.putString("video_info_name",outputFile_timeinfo);
+                    bundle.putString("the_room_number",roomnumber);
 
                     between_video fragment_object = new between_video();
                     fragment_object.setArguments(bundle);
@@ -204,9 +209,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @SuppressLint("RestrictedApi")
     private void recordVideo() {
         if (videoCapture != null) {
-
-//           File file1 = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath(),
-//                    System.currentTimeMillis() + ".mp4");
 
             File video = new File(getExternalFilesDir("/").getAbsolutePath(), "Video");
             if (!video.exists()) {

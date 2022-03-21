@@ -25,13 +25,7 @@
             android:name=".CameraActivity"
             android:exported="true" />
         <activity
-            android:name=".Filesend"
-            android:exported="true" />
-        <activity
             android:name=".Audio_recorder"
-            android:exported="true" />
-        <activity
-            android:name=".select_file"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

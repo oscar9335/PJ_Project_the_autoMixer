@@ -3,32 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graph_nav_main"
-    app:startDestination="@id/home_page">
-    <fragment
-        android:id="@+id/home_page"
-        android:name="com.example.project_prototype.home_page"
-        android:label="fragment_home_page"
-        tools:layout="@layout/fragment_home_page" >
-        <action
-            android:id="@+id/action_home_page_to_audio_recorder"
-            app:destination="@id/audio_recorder" />
-        <action
-            android:id="@+id/action_home_page_to_cameraActivity3"
-            app:destination="@id/cameraActivity" />
-        <action
-            android:id="@+id/action_home_page_to_room"
-            app:destination="@id/room" />
-    </fragment>
+    app:startDestination="@id/room">
     <activity
         android:id="@+id/audio_recorder"
         android:name="com.example.project_prototype.Audio_recorder"
         android:label="activity_audio_recorder"
-        tools:layout="@layout/activity_audio_recorder" />
+        tools:layout="@layout/activity_audio_recorder"
+        >
+        <argument
+            android:name="pass_room_number_toaudio"
+            app:argType="string"
+            android:defaultValue="Nothing" />
+    </activity>
+
     <activity
         android:id="@+id/cameraActivity"
         android:name="com.example.project_prototype.CameraActivity"
         android:label="activity_camera"
-        tools:layout="@layout/activity_camera" />
+        tools:layout="@layout/activity_camera" >
+        <argument
+            android:name="pass_room_number_tovideo"
+            app:argType="string"
+            android:defaultValue="Nothing" />
+    </activity>
+
     <fragment
         android:id="@+id/room"
         android:name="com.example.project_prototype.Room"
@@ -37,6 +35,21 @@
         <action
             android:id="@+id/action_room_to_home_page"
             app:destination="@id/home_page" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/home_page"
+        android:name="com.example.project_prototype.home_page"
+        android:label="fragment_home_page"
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_home_page_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_home_page_to_audio_recorder"
+            app:destination="@id/audio_recorder" />
+
+
     </fragment>
 
 </navigation>

@@ -1,10 +1,15 @@
 package com.example.project_prototype;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -13,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 public class home_page extends Fragment implements View.OnClickListener{
@@ -23,7 +29,28 @@ public class home_page extends Fragment implements View.OnClickListener{
     private ImageButton video_mode_button;
     private Button file_select;
 
-    private Button testbt;
+    private TextView roomcontainer;
+
+    //this is the Room number , needed to pass to the Audio can Camera activity
+    private String roomnumber;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //receive data(room number) from Room
+        getParentFragmentManager().setFragmentResultListener("passroomnumber", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String key, @NonNull Bundle bundle) {
+                // We use a String here, but any type that can be put in a Bundle is supported
+                roomnumber = bundle.getString("bundleKey");
+                // Do something with the result...
+                roomcontainer.setText("Room: " + roomnumber);
+                System.out.println("This is the room number :" + roomnumber);
+            }
+        });
+
+    }
 
 
     @Override
@@ -47,8 +74,9 @@ public class home_page extends Fragment implements View.OnClickListener{
         video_mode_button.setOnClickListener(this);
         file_select.setOnClickListener(this);
 
-        testbt = view.findViewById(R.id.testbt);
-        testbt.setOnClickListener(this);
+        roomcontainer = view.findViewById(R.id.roomcontainer);
+
+
 
 
 
@@ -58,17 +86,22 @@ public class home_page extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.audio_mode:
-                navController.navigate(R.id.action_home_page_to_audio_recorder);
+
+                //debug
+                System.out.println("CLick room: " + roomnumber);
+
+                Bundle bundle_audio = new Bundle();
+                bundle_audio.putString("pass_room_number_toaudio", roomnumber);
+                navController.navigate(R.id.action_home_page_to_audio_recorder,bundle_audio);
+
                 break;
             case R.id.video_mode:
-                navController.navigate(R.id.action_home_page_to_cameraActivity3);
+
+                Bundle bundle_video = new Bundle();
+                bundle_video.putString("pass_room_number_tovideo", roomnumber);
+                navController.navigate(R.id.action_home_page_to_cameraActivity,bundle_video);
                 break;
-            case R.id.file:
-                navController.navigate(R.id.action_home_page_to_room);
-                break;
-            case R.id.testbt:
-                navController.navigate(R.id.action_home_page_to_room);
-                break;
+
         }
     }
 }

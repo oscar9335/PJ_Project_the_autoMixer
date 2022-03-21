@@ -149,6 +149,11 @@ public class Room extends Fragment implements View.OnClickListener ,View.OnKeyLi
                             //System.out.println(ok);
                             if(ok.equals("Ok") || ok.equals("Ye")) {
                                 navController.navigate(R.id.action_room_to_home_page);
+
+                                //send data
+                                Bundle result = new Bundle();
+                                result.putString("bundleKey", room_number);
+                                getParentFragmentManager().setFragmentResult("passroomnumber", result);
                             }
                         }
                     });
