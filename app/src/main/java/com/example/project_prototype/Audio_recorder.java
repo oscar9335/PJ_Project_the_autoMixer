@@ -94,8 +94,9 @@ public class Audio_recorder extends AppCompatActivity {
     private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
     private TextView audio_upload_txt;
 
-    private Button download;
-    private String download_check = "NOT";
+    private Button upload;
+
+    //private String download_check = "NOT";
 
     private String download_filename;
 
@@ -105,6 +106,8 @@ public class Audio_recorder extends AppCompatActivity {
     private Uri Download_Uri;
 
     private String roomnumber;
+
+    private int key_for_uploadbt = -1;
 
 
     @Override
@@ -133,8 +136,8 @@ public class Audio_recorder extends AppCompatActivity {
         for16K.setOnClickListener(click);
         for44K.setOnClickListener(click);
 
-        download = (Button) findViewById(R.id.downloadinaudio);
-        download.setOnClickListener(click);
+        upload = (Button) findViewById(R.id.uploadAudio_bt);
+        upload.setOnClickListener(click);
 
         // I need to obtain the room number here to navigate to the specific route
 
@@ -189,14 +192,22 @@ public class Audio_recorder extends AppCompatActivity {
                     }
                     break;
 
-                case R.id.downloadinaudio:
-//                    downloadPost(url);
-                    downloadComposed(url,roomnumtest);
+                case R.id.uploadAudio_bt:
+                    if(key_for_uploadbt == 1) {
+                        audio_upload_txt.setText("Uploading..., please do not exit!!!");
+                        //http
+                        postRequest(url, outputFile, thefilename, info_path, outputFile_timeinfo);
+                    }
+                    else{
+                        audio_upload_txt.setText("Please record the audio first!!!");
+                    }
                     break;
             }
         }
     };
     private void record() {
+        key_for_uploadbt = 0;
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
         Date now = new Date();
 
@@ -285,7 +296,7 @@ public class Audio_recorder extends AppCompatActivity {
     }
 
     private void stopRecording() {
-        audio_upload_txt.setText("Uploading..., please do not exit!!!");
+
 
         if(myAudioRecorder != null) {
             timer.stop();
@@ -300,8 +311,7 @@ public class Audio_recorder extends AppCompatActivity {
                     time_imformation.flush();
                     time_imformation.close();
 
-                    //hgttp
-                    postRequest(url,outputFile,thefilename,info_path,outputFile_timeinfo);
+
                     
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -315,6 +325,8 @@ public class Audio_recorder extends AppCompatActivity {
             myAudioRecorder.release();
             myAudioRecorder = null;
             textView4.setText("stop! SAVE IN " + outputFile);
+
+            key_for_uploadbt = 1;
         }
     }
 

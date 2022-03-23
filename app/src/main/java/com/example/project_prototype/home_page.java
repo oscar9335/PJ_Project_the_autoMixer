@@ -1,6 +1,9 @@
 package com.example.project_prototype;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.ComponentActivity;
@@ -13,6 +16,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +31,16 @@ public class home_page extends Fragment implements View.OnClickListener{
 
     private ImageButton audio_mode_button;
     private ImageButton video_mode_button;
-    private Button file_select;
+    private Button downloadbt;
 
     private TextView roomcontainer;
 
     //this is the Room number , needed to pass to the Audio can Camera activity
     private String roomnumber;
+
+    private Uri Download_Uri;
+
+    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,11 +76,11 @@ public class home_page extends Fragment implements View.OnClickListener{
 
         audio_mode_button =  view.findViewById(R.id.audio_mode);
         video_mode_button =  view.findViewById(R.id.video_mode);
-        file_select =  view.findViewById(R.id.file);
+        downloadbt =  view.findViewById(R.id.downloadbt);
 
         audio_mode_button.setOnClickListener(this);
         video_mode_button.setOnClickListener(this);
-        file_select.setOnClickListener(this);
+        downloadbt.setOnClickListener(this);
 
         roomcontainer = view.findViewById(R.id.roomcontainer);
 
@@ -102,6 +110,30 @@ public class home_page extends Fragment implements View.OnClickListener{
                 navController.navigate(R.id.action_home_page_to_cameraActivity,bundle_video);
                 break;
 
+            case R.id.downloadbt:
+                downloadComposed(url , roomnumber);
+                break;
+
         }
+    }
+
+
+    private void downloadComposed(String url , String roomnum){
+
+        DownloadManager downloadManager = (DownloadManager) getActivity().getBaseContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        Download_Uri = Uri.parse(url + "Download" + roomnum);
+        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        //request.setAllowedOverRoaming(false);
+
+        request.setTitle("Download Result");
+        request.setDescription("Downloading your masterpice");
+        request.setVisibleInDownloadsUi(true);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES,"Download.mp4");
+
+        //String mediaType = getMimeType(audio_file_path);
+        request.setMimeType("*/*");
+        downloadManager.enqueue(request);
+
     }
 }

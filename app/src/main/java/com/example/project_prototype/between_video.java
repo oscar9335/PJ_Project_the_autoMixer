@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -53,12 +56,14 @@ public class between_video extends Fragment implements View.OnClickListener{
     private boolean success = false;
 
 
-    private Button download;
-    private String roomnumtest = "1";
-    private Uri Download_Uri;
+//    private Button download;
+//    private String roomnumtest = "1";
+
 
     private String roomnumber;
     private TextView roomcontainer;
+
+    private Button composebt;
 
 
     @Override
@@ -92,11 +97,15 @@ public class between_video extends Fragment implements View.OnClickListener{
         file_name.setText("Video: " + video_name);
         upload_status.setText("Please Click UPLOAD button");
 
-        download = view.findViewById(R.id.downloadinvideo);
-        download.setOnClickListener(this);
+//        download = view.findViewById(R.id.downloadinvideo);
+//        download.setOnClickListener(this);
 
         roomcontainer = view.findViewById(R.id.room_container_inbetween);
         roomcontainer.setText(roomnumber);
+
+        composebt = view.findViewById(R.id.composebt);
+        composebt.setOnClickListener(this);
+        composebt.setVisibility(View.GONE);
 
 
 
@@ -109,8 +118,10 @@ public class between_video extends Fragment implements View.OnClickListener{
                 postRequest(url,video_path,video_name,video_info_path,video_info_name);
                 break;
 
-            case R.id.downloadinvideo:
-                downloadComposed(url,roomnumtest);
+
+            case R.id.composebt:
+                upload_status.setText("Composing...");
+                onCompose(url,roomnumber);
                 break;
         }
 
@@ -136,8 +147,8 @@ public class between_video extends Fragment implements View.OnClickListener{
                 .addFormDataPart("video_info", video_info_name , RequestBody.create(MediaType.parse(textType),info))
                 .build();
 
-
         String audio_url = URL + "Video_store";
+
         Request request = new Request
                 .Builder()
                 .post(requestBody)
@@ -149,65 +160,60 @@ public class between_video extends Fragment implements View.OnClickListener{
             @Override
             public void onFailure(final Call call, final IOException e) {
                 upload_status.setText(e.getMessage());
-//                upload_success = false;
                 call.cancel();
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        upload_status.setText(e.getMessage());
-//                        //Toast.makeText(between_video.this, "Something went wrong:" + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        call.cancel();
-//                    }
-//                };
             }
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
                     upload_status.setText(response.body().string());
-//                    between_video.upload_success = true;
-                    //upload.setVisibility(View.GONE);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            composebt.setVisibility(View.VISIBLE);
+                        }
+                    });
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        //Toast.makeText(Audio_recorder.this, response.body().string(), Toast.LENGTH_LONG).show();
-//                        try {
-//                            upload_status.setText(response.body().string());
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                };
+
             }
         });
         success = true;
     }
 
-    private void downloadComposed(String url , String roomnum){
 
-//        File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Download");
-//        if (!root.exists()) {
-//            root.mkdirs();
-//        }
-        //File mdownload = new File(root, "Masterpice.mp4");
 
-        DownloadManager downloadManager = (DownloadManager) getActivity().getBaseContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        Download_Uri = Uri.parse(url + "Download" + roomnum);
-        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        //request.setAllowedOverRoaming(false);
-        request.setTitle("Download Result");
-        request.setDescription("Downloading your masterpice");
-        request.setVisibleInDownloadsUi(true);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES,"Download.mp4");
+    private void onCompose(String URL, String room_number){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("compose_file", "compose")
+                .add("room_number", room_number)
+                .build();
 
-        //String mediaType = getMimeType(audio_file_path);
-        request.setMimeType("*/*");
-        downloadManager.enqueue(request);
+        String compose_url = URL + "Compose";
+
+        Request request = new Request.Builder()
+                .url(compose_url)
+                .post(formBody)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                upload_status.setText("Something went wrong: "+ e.getMessage());
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                upload_status.setText(response.body().string());
+            }
+        });
 
     }
+
 
 
     private String getMimeType(String path){

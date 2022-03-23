@@ -68,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/file"
+        android:id="@+id/downloadbt"
         android:layout_width="350dp"
         android:layout_height="75dp"
         android:background="@android:color/holo_green_light"
