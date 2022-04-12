@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -74,12 +75,13 @@ public class Audio_recorder extends AppCompatActivity {
 
     private Chronometer timer;
 
-    private Button for8K;
-    private Button for16K;
-    private Button for44K;
+//    private Button for8K;
+//    private Button for16K;
+//    private Button for44K;
 
-    private int samplerate = 8000;
-    private String samplerate_show = "8000\n";
+    // I will obtain the setting information from server and change the recorder framerate
+    private int samplerate = 44100;
+    private String samplerate_show = "44100\n";
 
     private TextView see_time_start;
     private TextView see_time_end;
@@ -91,7 +93,11 @@ public class Audio_recorder extends AppCompatActivity {
     String thefilename;
 
     //OKhttp URL setting
+
     private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
+
+
     private TextView audio_upload_txt;
 
     private Button upload;
@@ -127,14 +133,14 @@ public class Audio_recorder extends AppCompatActivity {
         see_time_end = (TextView) findViewById(R.id.see_time_end);
 
         timer = (Chronometer) findViewById(R.id.record_timer2);
-        for8K = (Button) findViewById((R.id.for8k2)) ;
-        for16K = (Button) findViewById((R.id.for16k2)) ;
-        for44K = (Button) findViewById((R.id.for44_1k2)) ;
+//        for8K = (Button) findViewById((R.id.for8k2)) ;
+//        for16K = (Button) findViewById((R.id.for16k2)) ;
+//        for44K = (Button) findViewById((R.id.for44_1k2)) ;
 
         recorder_button.setOnClickListener(click);
-        for8K.setOnClickListener(click);
-        for16K.setOnClickListener(click);
-        for44K.setOnClickListener(click);
+//        for8K.setOnClickListener(click);
+//        for16K.setOnClickListener(click);
+//        for44K.setOnClickListener(click);
 
         upload = (Button) findViewById(R.id.uploadAudio_bt);
         upload.setOnClickListener(click);
@@ -147,7 +153,18 @@ public class Audio_recorder extends AppCompatActivity {
 
         //receive data from hoom_fragment using SafeArg
         roomnumber = getIntent().getExtras().getString("pass_room_number_toaudio");
+        samplerate_show = getIntent().getExtras().getString("pass_audioframerate_toaudio");
+        samplerate = Integer.parseInt(samplerate_show);
+
+        System.out.println("Kill me " + samplerate);
         System.out.println("Kill me " + roomnumber);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        //this place need to obtain framerate from server using request and response
+        // samplerate = ?
+        //samplerate_show = "?\n";
+        //textView4.setText("Select ?");
 
 
 
@@ -167,30 +184,30 @@ public class Audio_recorder extends AppCompatActivity {
                         isRecording = true;
                     }
                     break;
-                case R.id.for8k2:
-                    if(isRecording == false) {
-                        //can change the frame rate
-                        samplerate = 8000; //default
-                        samplerate_show = "8000\n";
-                        textView4.setText("Select 8KHZ");
-                    }
-                    break;
-                case R.id.for16k2:
-                    if(isRecording == false) {
-                        //can change the frame rate
-                        samplerate = 16000; //default
-                        samplerate_show = "16000\n";
-                        textView4.setText("Select 16KHZ");
-                    }
-                    break;
-                case R.id.for44_1k2:
-                    if(isRecording == false) {
-                        //can change the frame rate
-                        samplerate = 44100; //default
-                        samplerate_show = "44100\n";
-                        textView4.setText("Select 44.1KHZ");
-                    }
-                    break;
+//                case R.id.for8k2:
+//                    if(isRecording == false) {
+//                        //can change the frame rate
+//                        samplerate = 8000; //default
+//                        samplerate_show = "8000\n";
+//                        textView4.setText("Select 8KHZ");
+//                    }
+//                    break;
+//                case R.id.for16k2:
+//                    if(isRecording == false) {
+//                        //can change the frame rate
+//                        samplerate = 16000; //default
+//                        samplerate_show = "16000\n";
+//                        textView4.setText("Select 16KHZ");
+//                    }
+//                    break;
+//                case R.id.for44_1k2:
+//                    if(isRecording == false) {
+//                        //can change the frame rate
+//                        samplerate = 44100; //default
+//                        samplerate_show = "44100\n";
+//                        textView4.setText("Select 44.1KHZ");
+//                    }
+//                    break;
 
                 case R.id.uploadAudio_bt:
                     if(key_for_uploadbt == 1) {

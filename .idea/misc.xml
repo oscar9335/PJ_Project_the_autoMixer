@@ -14,7 +14,7 @@
         <entry key="..\:/Android Project/Project_the_prototype/app/src/main/res/layout/fragment_item.xml" value="0.25364583333333335" />
         <entry key="..\:/Android Project/Project_the_prototype/app/src/main/res/layout/fragment_item_list.xml" value="0.25364583333333335" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/drawable/primary_rectangle.xml" value="0.26979166666666665" />
-        <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/activity_audio_recorder.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/activity_audio_recorder.xml" value="0.264" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/activity_between_video.xml" value="0.25364583333333335" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/activity_camera.xml" value="0.25" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/activity_camera2.xml" value="0.25364583333333335" />
@@ -30,6 +30,7 @@
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/fragment_home_page.xml" value="0.25364583333333335" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/fragment_primary_page.xml" value="0.264" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/fragment_room.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/fragment_room_holder_setting.xml" value="0.264" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/layout/primary_rectangle.xml" value="0.25364583333333335" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.26979166666666665" />
         <entry key="..\:/Android Project/app/Project_the_prototype/app/src/main/res/xml/styles.xml" value="0.25364583333333335" />

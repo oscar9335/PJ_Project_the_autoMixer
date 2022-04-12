@@ -5,44 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".between_video"
-    android:id="@+id/video_fragment">
+    android:id="@+id/video_fragment"
+    >
 
 
     <TextView
         android:id="@+id/video_file_name"
-        android:layout_width="357dp"
-        android:layout_height="77dp"
+        android:layout_width="373dp"
+        android:layout_height="78dp"
         android:text="Hello"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/file_upload_status"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.68" />
 
     <TextView
         android:id="@+id/file_upload_status"
         android:layout_width="369dp"
         android:layout_height="78dp"
-        android:textSize="25dp"
-        android:layout_marginBottom="472dp"
+        android:layout_marginBottom="184dp"
         android:text="Hello"
+        android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/upload_bt"
         android:layout_width="188dp"
         android:layout_height="140dp"
-        android:textSize="30dp"
         android:text="Upload"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.848" />
+        app:layout_constraintVertical_bias="0.94" />
 
     <TextView
         android:id="@+id/okcheck"
@@ -73,9 +76,9 @@
         android:text="COMPOSE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.815"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.609" />
+        app:layout_constraintVertical_bias="0.876" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

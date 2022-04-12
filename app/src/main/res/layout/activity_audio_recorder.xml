@@ -4,46 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Audio_recorder">
+    tools:context=".Audio_recorder"
+    >
 
 
-    <Button
-        android:id="@+id/for8k2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="8K HZ"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.125"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050" />
 
-    <Button
-        android:id="@+id/for16k2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="16K HZ"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050" />
-    <Button
-        android:id="@+id/for44.1k2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="44.1 HZ"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050" />
 
     <ImageButton
         android:id="@+id/recorder_button"

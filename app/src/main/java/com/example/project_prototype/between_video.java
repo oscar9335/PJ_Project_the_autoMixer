@@ -2,6 +2,7 @@ package com.example.project_prototype;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -52,6 +53,7 @@ public class between_video extends Fragment implements View.OnClickListener{
 
     //OKhttp URL setting
     private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
     private boolean success = false;
 
@@ -64,6 +66,8 @@ public class between_video extends Fragment implements View.OnClickListener{
     private TextView roomcontainer;
 
     private Button composebt;
+
+    private String upladstatus;
 
 
     @Override
@@ -106,6 +110,8 @@ public class between_video extends Fragment implements View.OnClickListener{
         composebt = view.findViewById(R.id.composebt);
         composebt.setOnClickListener(this);
         composebt.setVisibility(View.GONE);
+
+        this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
 
@@ -171,6 +177,8 @@ public class between_video extends Fragment implements View.OnClickListener{
                         @Override
                         public void run() {
                             composebt.setVisibility(View.VISIBLE);
+                            upload.setVisibility(View.GONE);
+
                         }
                     });
 

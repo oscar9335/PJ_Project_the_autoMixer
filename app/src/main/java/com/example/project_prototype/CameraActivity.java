@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
 import androidx.camera.core.VideoCapture;
+import androidx.camera.core.impl.VideoCaptureConfig;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
@@ -21,11 +22,13 @@ import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Size;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -78,11 +81,18 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+
+
         setContentView(R.layout.activity_camera);
 
         previewView = findViewById(R.id.previewView);
         bRecord = findViewById(R.id.bRecord);
         bRecord.setOnClickListener(this);
+
+
 
 
 
@@ -93,6 +103,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 startCameraX(cameraProvider);
 
             } catch (ExecutionException | InterruptedException e) {
+
                 e.printStackTrace();
             }
         }, getExecutor());
@@ -108,6 +119,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         System.out.println("Kill me " + roomnumber);
 
 
+
+
     }
 
     Executor getExecutor() {
@@ -118,7 +131,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @SuppressLint("RestrictedApi")
     private void startCameraX(ProcessCameraProvider cameraProvider) {
 
-        //rotation = previewView.getDisplay().getRotation();
+          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+//        rotation = previewView.getDisplay().getRotation();
 
 
 //        CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -142,8 +157,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 //        videoCapture = new VideoCapture.Builder()
 //                .setTargetRotation(rotation)
 //                .build();
+
+
         videoCapture = new VideoCapture.Builder()
+                .setTargetResolution(new Size(1280, 720))
                 .build();
+
+
 
 
         cameraProvider.unbindAll();
@@ -192,14 +212,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     fragment_object.setArguments(bundle);
 
 
+//                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,fragment_object).commit();
                     bRecord.setVisibility(View.GONE);
                     previewView.setVisibility(View.GONE);
 
-//                    Preview preview = new Preview.Builder()
-//                            .setTargetRotation(rotation)
-//                            .build();
-//                    preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
 
                 }
                 break;

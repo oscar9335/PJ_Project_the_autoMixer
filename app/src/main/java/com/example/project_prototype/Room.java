@@ -1,5 +1,6 @@
 package com.example.project_prototype;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class Room extends Fragment implements View.OnClickListener ,View.OnKeyLi
 
     //http
     private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
 
 
@@ -70,8 +72,10 @@ public class Room extends Fragment implements View.OnClickListener ,View.OnKeyLi
 
         roomreport = view.findViewById(R.id.roomreport);
 
+        this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     }
+
 
     @Override
     public void onClick(View view) {
@@ -147,12 +151,24 @@ public class Room extends Fragment implements View.OnClickListener ,View.OnKeyLi
                         public void run() {
                             //roomreport.setText("IN THE RUN ON UI THREAD");
                             //System.out.println(ok);
-                            if(ok.equals("Ok") || ok.equals("Ye")) {
+
+                            //ok enter Setting
+                            if(ok.equals("Ok")) {
+                                navController.navigate(R.id.action_room_to_roomHolderSetting);
+
+                                //send data
+                                Bundle result = new Bundle();
+                                result.putString("sendtosetting", room_number);
+                                getParentFragmentManager().setFragmentResult("passtosetting", result);
+                            }
+                            //yes enter labby
+                            else if(ok.equals("Ye")) {
                                 navController.navigate(R.id.action_room_to_home_page);
 
                                 //send data
                                 Bundle result = new Bundle();
                                 result.putString("bundleKey", room_number);
+                                result.putString("idKey", "Guest");
                                 getParentFragmentManager().setFragmentResult("passroomnumber", result);
                             }
                         }

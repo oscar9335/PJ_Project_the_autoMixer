@@ -14,6 +14,9 @@
             android:name="pass_room_number_toaudio"
             app:argType="string"
             android:defaultValue="Nothing" />
+        <argument
+            android:name="pass_audioframerate_toaudio"
+            app:argType="string" />
     </activity>
 
     <activity
@@ -35,6 +38,9 @@
         <action
             android:id="@+id/action_room_to_home_page"
             app:destination="@id/home_page" />
+        <action
+            android:id="@+id/action_room_to_roomHolderSetting"
+            app:destination="@id/roomHolderSetting" />
     </fragment>
 
     <fragment
@@ -50,6 +56,20 @@
             app:destination="@id/audio_recorder" />
 
 
+    </fragment>
+    <fragment
+        android:id="@+id/between_video"
+        android:name="com.example.project_prototype.between_video"
+        android:label="fragment_between_video"
+        tools:layout="@layout/fragment_between_video" />
+    <fragment
+        android:id="@+id/roomHolderSetting"
+        android:name="com.example.project_prototype.roomHolderSetting"
+        android:label="fragment_room_holder_setting"
+        tools:layout="@layout/fragment_room_holder_setting" >
+        <action
+            android:id="@+id/action_roomHolderSetting_to_home_page"
+            app:destination="@id/home_page" />
     </fragment>
 
 </navigation>
