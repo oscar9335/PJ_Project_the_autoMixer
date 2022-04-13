@@ -56,8 +56,8 @@ public class home_page extends Fragment implements View.OnClickListener{
 
     private Uri Download_Uri;
 
-    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
-//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
+//    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

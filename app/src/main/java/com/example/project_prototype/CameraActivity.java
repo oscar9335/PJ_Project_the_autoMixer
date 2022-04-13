@@ -149,6 +149,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 //                .build();
 
         Preview preview = new Preview.Builder()
+                .setTargetResolution(new Size(640, 360))
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
@@ -160,7 +161,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 
         videoCapture = new VideoCapture.Builder()
-                .setTargetResolution(new Size(1280, 720))
+                .setCameraSelector(cameraSelector)
+                .setTargetResolution(new Size(640, 360))
+                .setVideoFrameRate(30)
                 .build();
 
 

@@ -44,8 +44,8 @@ public class Room extends Fragment implements View.OnClickListener ,View.OnKeyLi
     private String ok;
 
     //http
-    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
-//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
+//    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
 
 

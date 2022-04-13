@@ -94,8 +94,8 @@ public class Audio_recorder extends AppCompatActivity {
 
     //OKhttp URL setting
 
-    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
-//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
+//    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
 
     private TextView audio_upload_txt;

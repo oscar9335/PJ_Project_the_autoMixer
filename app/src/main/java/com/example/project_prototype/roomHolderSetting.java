@@ -44,8 +44,8 @@ public class roomHolderSetting extends Fragment implements View.OnClickListener{
     private String roomnumber = "****";
     private String audioFramerate = "44100";
 
-    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
-//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
+//    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -52,8 +52,8 @@ public class between_video extends Fragment implements View.OnClickListener{
     private String video_info_name = null;
 
     //OKhttp URL setting
-    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
-//    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
+//    private String url = "http://" + "192.168.1.101" + ":" + 5000 + "/";
+    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
     private boolean success = false;
 
