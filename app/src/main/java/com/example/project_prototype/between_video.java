@@ -98,7 +98,7 @@ public class between_video extends Fragment implements View.OnClickListener{
         file_name = view.findViewById(R.id.video_file_name);
 
 
-        file_name.setText("Video: " + video_name);
+        file_name.setText(video_path);
         upload_status.setText("Please Click UPLOAD button");
 
 //        download = view.findViewById(R.id.downloadinvideo);

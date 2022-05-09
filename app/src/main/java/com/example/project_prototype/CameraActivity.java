@@ -82,8 +82,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-
+        //high project name section
+        getSupportActionBar().hide();
+        //full screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
         setContentView(R.layout.activity_camera);
@@ -92,9 +94,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         bRecord = findViewById(R.id.bRecord);
         bRecord.setOnClickListener(this);
 
+        checkPermission();
 
-
-
+        //receive data from hoom_fragment using SafeArg
+        roomnumber = getIntent().getExtras().getString("pass_room_number_tovideo");
+        System.out.println("Kill me " + roomnumber);
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -106,74 +110,59 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 e.printStackTrace();
             }
-        }, getExecutor());
+        }, ContextCompat.getMainExecutor(this));
 
-        //high project name section
-        getSupportActionBar().hide();
-        //full screen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
-        //receive data from hoom_fragment using SafeArg
-        roomnumber = getIntent().getExtras().getString("pass_room_number_tovideo");
-        System.out.println("Kill me " + roomnumber);
-
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
 
     }
 
-    Executor getExecutor() {
-        return ContextCompat.getMainExecutor(this);
-    }
+//    Executor getExecutor() {
+//        return ContextCompat.getMainExecutor(this);
+//    }
 
 
     @SuppressLint("RestrictedApi")
     private void startCameraX(ProcessCameraProvider cameraProvider) {
 
-          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 //        rotation = previewView.getDisplay().getRotation();
 
 
 //        CameraSelector cameraSelector = new CameraSelector.Builder()
 //                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
 //                .build();
+        cameraProvider.unbindAll();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
 
-//        Preview preview = new Preview.Builder()
-//                .setTargetRotation(rotation)
-//                .build();
 
         Preview preview = new Preview.Builder()
-                .setTargetResolution(new Size(640, 360))
+//                .setTargetResolution(new Size(1280, 720))
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
 
-        // Video capture use case
-//        videoCapture = new VideoCapture.Builder()
-//                .setTargetRotation(rotation)
-//                .build();
-
-
         videoCapture = new VideoCapture.Builder()
                 .setCameraSelector(cameraSelector)
-                .setTargetResolution(new Size(640, 360))
+//                .setTargetResolution(new Size(1280, 720))
+//                .setIFrameInterval(10)  //what is this
+                .setBitRate(5000000)
                 .setVideoFrameRate(30)
                 .build();
 
 
-
-
-        cameraProvider.unbindAll();
+//        cameraProvider.unbindAll();
         //bind to lifecycle:
-        cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview,videoCapture);
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview,videoCapture);
 
-        checkPermission();
+//        checkPermission();
     }
 
     @SuppressLint("RestrictedApi")
@@ -190,7 +179,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     bRecord.setText("START");
                     videoCapture.stopRecording();
 
-
                     Date time2 = new Date();
                     SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
                     try {
@@ -200,7 +188,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
 
                     //this place ##important##
                     //send the video_file_name & video_info_name to the front fragment and let the fragment do the upload file job
@@ -214,15 +201,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     between_video fragment_object = new between_video();
                     fragment_object.setArguments(bundle);
 
-
 //                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,fragment_object).commit();
                     bRecord.setVisibility(View.GONE);
                     previewView.setVisibility(View.GONE);
-
-
 
                 }
                 break;
@@ -238,86 +222,92 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 video.mkdirs();
             }
 
+            File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Video_time_info");
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
             Date now = new Date();
             File file = new File( getExternalFilesDir("Video").getAbsolutePath() + "/" + formatter.format(now) + ".mp4");
-            outputFile = file.getPath();
+
+
+//            outputFile = file.getPath();
+
             video_name = formatter.format(now) + ".mp4";
+            String videovideoname = formatter.format(now);
 
             outputFile_timeinfo = "video_time_info" + formatter.format(now) + ".txt";
 
             try {
-                File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Video_time_info");
-                if (!root.exists()) {
-                    root.mkdirs();
-                }
                 File filepath = new File(root, outputFile_timeinfo);
                 video_info_path = filepath.getPath();
-
                 time_imformation = new FileWriter(filepath);
 
-                //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            VideoCapture.Metadata metadata = new VideoCapture.Metadata();
-            VideoCapture.OutputFileOptions outputFileOptions = new VideoCapture.OutputFileOptions.Builder(file).build();
+//            VideoCapture.Metadata metadata = new VideoCapture.Metadata();
+//            VideoCapture.OutputFileOptions outputFileOptions = new VideoCapture.OutputFileOptions.Builder(file).setMetadata(metadata).build();
 
-//            long timestamp = System.currentTimeMillis();
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
-//            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+
 
             try {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-
-
-
                 for_time = new between_video();
-
                 Date time = new Date();
                 SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
-
-                //tart_time.setText(formatter_start.format(time));
                 try {
-                    //time_imformation.append(sBody);
                     time_imformation.write(formatter_start.format(time)+"\n");
                     time_imformation.flush();
-
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                videoCapture.startRecording(
-                        outputFileOptions,
-                        getExecutor(),
-                        new VideoCapture.OnVideoSavedCallback() {
-                            @Override
-                            public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
-                                Toast.makeText(CameraActivity.this, "Video has been saved successfully.", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
-                                Toast.makeText(CameraActivity.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
+//            long timestamp = System.currentTimeMillis();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, videovideoname);
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");    // this is significant WTF
+
+            outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath() + "/" + videovideoname + ".mp4";
+            System.out.println(outputFile);
+
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+
+            videoCapture.startRecording(
+//                outputFileOptions,
+                    new VideoCapture.OutputFileOptions.Builder(
+                            getContentResolver(),
+                            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                            contentValues
+                    ).build(),
+                ContextCompat.getMainExecutor(this),
+                new VideoCapture.OnVideoSavedCallback() {
+                    @Override
+                    public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
+                        Toast.makeText(CameraActivity.this, outputFile, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
+                        Toast.makeText(CameraActivity.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            );
 
         }
     }

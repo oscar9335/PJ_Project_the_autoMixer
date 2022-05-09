@@ -28,7 +28,7 @@
         android:layout_height="78dp"
         android:layout_marginBottom="184dp"
         android:text="Hello"
-        android:textSize="25dp"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.516"
