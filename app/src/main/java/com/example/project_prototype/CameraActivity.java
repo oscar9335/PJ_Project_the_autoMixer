@@ -151,7 +151,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         videoCapture = new VideoCapture.Builder()
                 .setCameraSelector(cameraSelector)
-//                .setTargetResolution(new Size(1280, 720))
+                .setTargetResolution(new Size(1280, 720))
 //                .setIFrameInterval(10)  //what is this
                 .setBitRate(5000000)
                 .setVideoFrameRate(30)
