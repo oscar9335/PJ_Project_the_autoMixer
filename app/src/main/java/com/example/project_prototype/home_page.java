@@ -150,18 +150,53 @@ public class home_page extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.downloadbt:
-                downloadComposed(url , roomnumber);
+                downloadsupportpostrequest(url,roomnumber);
                 break;
 
         }
     }
 
+    private void downloadsupportpostrequest(String URL, String roomnumber){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String setting_URL = URL + "Download_get_roomnumber";
 
-    private void downloadComposed(String url , String roomnum){
+        RequestBody formBody = new FormBody.Builder()
+                .add("roomcode", roomnumber)
+                .build();
+        Request request = new Request.Builder()
+                .url(setting_URL)
+                .post(formBody)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "Something went wrong, please join room again!!!", Toast.LENGTH_LONG).show();
+                        call.cancel();
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("In the downloadsupportpostrequest response successed to download");
+                        downloadComposed(URL,roomnumber);
+                    }
+                });
+            }
+        });
+    }
 
+
+    private void downloadComposed(String url,String roomnumber){
 
         DownloadManager downloadManager = (DownloadManager) getActivity().getBaseContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        Download_Uri = Uri.parse(url + "Download" + roomnum);
+//        Download_Uri = Uri.parse(url + "Download" + "/" + "<" + roomnum + ">");
+        Download_Uri = Uri.parse(url + "Download/"+roomnumber);
         System.out.println(Download_Uri);
 
         DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
@@ -171,7 +206,7 @@ public class home_page extends Fragment implements View.OnClickListener{
         request.setTitle("Download Result");
         request.setDescription("Downloading your masterpice");
         request.setVisibleInDownloadsUi(true);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES,"Download.mp4");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES,"MasterpiceDownload.mp4");
 
         //String mediaType = getMimeType(audio_file_path);
         request.setMimeType("*/*");
@@ -224,8 +259,7 @@ public class home_page extends Fragment implements View.OnClickListener{
 
 
     }
-
-    // for progress bar
+    // for progress bar status (message)
     @SuppressLint("Range")
     private String statusMessage(Cursor c) {
         String msg = "???";
@@ -255,9 +289,10 @@ public class home_page extends Fragment implements View.OnClickListener{
                 msg = "Download is nowhere in sight";
                 break;
         }
-
         return (msg);
     }
+
+
 
     private void postRequest(String URL, String roomnumber) {
         OkHttpClient okHttpClient = new OkHttpClient();
