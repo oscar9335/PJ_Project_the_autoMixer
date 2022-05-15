@@ -1,9 +1,11 @@
 package com.example.project_prototype;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,11 +20,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +51,9 @@ public class home_page extends Fragment implements View.OnClickListener{
 
     private TextView roomcontainer;
     private TextView settingcontainer;
+
+    private ProgressBar dwprogressbar;
+    private TextView downloadmessage;
 
     //this is the Room number , needed to pass to the Audio can Camera activity
     private String roomnumber;
@@ -110,6 +117,11 @@ public class home_page extends Fragment implements View.OnClickListener{
         roomcontainer = view.findViewById(R.id.roomcontainer);
         settingcontainer = view.findViewById(R.id.homepage_settinginfo);
 
+        dwprogressbar = view.findViewById(R.id.dwprogressBar);
+        downloadmessage = view.findViewById(R.id.downloadmessage);
+//        dwprogressbar.setVisibility(View.GONE);
+
+
         this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
@@ -147,8 +159,11 @@ public class home_page extends Fragment implements View.OnClickListener{
 
     private void downloadComposed(String url , String roomnum){
 
+
         DownloadManager downloadManager = (DownloadManager) getActivity().getBaseContext().getSystemService(Context.DOWNLOAD_SERVICE);
         Download_Uri = Uri.parse(url + "Download" + roomnum);
+        System.out.println(Download_Uri);
+
         DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         //request.setAllowedOverRoaming(false);
@@ -162,6 +177,86 @@ public class home_page extends Fragment implements View.OnClickListener{
         request.setMimeType("*/*");
         downloadManager.enqueue(request);
 
+        final long downloadId = downloadManager.enqueue(request);
+        dwprogressbar.setVisibility(View.VISIBLE);
+
+        // for progress bar
+        new Thread(new Runnable() {
+            @SuppressLint("Range")
+            @Override
+            public void run() {
+
+                boolean downloading = true;
+
+                while (downloading) {
+
+                    DownloadManager.Query q = new DownloadManager.Query();
+                    q.setFilterById(downloadId);
+
+                    Cursor cursor = downloadManager.query(q);
+                    cursor.moveToFirst();
+                    int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                        downloading = false;
+                    }
+
+                    final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
+
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            dwprogressbar.setProgress((int) dl_progress);
+
+                        }
+                    });
+
+                    downloadmessage.setText(statusMessage(cursor));
+//                    Log.d(Constants.MAIN_VIEW_ACTIVITY, statusMessage(cursor));
+                    cursor.close();
+                }
+
+            }
+        }).start();
+
+
+    }
+
+    // for progress bar
+    @SuppressLint("Range")
+    private String statusMessage(Cursor c) {
+        String msg = "???";
+
+        switch (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+            case DownloadManager.STATUS_FAILED:
+                msg = "Download failed!";
+                break;
+
+            case DownloadManager.STATUS_PAUSED:
+                msg = "Download paused!";
+                break;
+
+            case DownloadManager.STATUS_PENDING:
+                msg = "Download pending!";
+                break;
+
+            case DownloadManager.STATUS_RUNNING:
+                msg = "Download in progress!";
+                break;
+
+            case DownloadManager.STATUS_SUCCESSFUL:
+                msg = "Download complete!";
+                break;
+
+            default:
+                msg = "Download is nowhere in sight";
+                break;
+        }
+
+        return (msg);
     }
 
     private void postRequest(String URL, String roomnumber) {

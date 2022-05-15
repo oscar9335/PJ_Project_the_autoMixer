@@ -67,6 +67,7 @@
         app:layout_constraintBottom_toTopOf="@+id/video_mode"
         app:layout_constraintEnd_toEndOf="parent" />
 
+
     <Button
         android:id="@+id/downloadbt"
         android:layout_width="350dp"
@@ -107,5 +108,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.65" />
+
+    <ProgressBar
+        android:id="@+id/dwprogressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="366dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.363" />
+
+    <TextView
+        android:id="@+id/downloadmessage"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.319" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
