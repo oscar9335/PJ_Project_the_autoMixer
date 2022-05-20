@@ -40,6 +40,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 //http
@@ -114,6 +115,9 @@ public class Audio_recorder extends AppCompatActivity {
     private String roomnumber;
 
     private int key_for_uploadbt = -1;
+
+
+    private String date_now_gotfromrequest = null;
 
 
     @Override
@@ -225,35 +229,49 @@ public class Audio_recorder extends AppCompatActivity {
     private void record() {
         key_for_uploadbt = 0;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
-        Date now = new Date();
-
-        System.out.println(now);
+        File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Audio_time_info");
+        if (!root.exists()) {
+            root.mkdirs();
+        }
 
         File audio = new File(getExternalFilesDir("/").getAbsolutePath(), "Audio");
         if (!audio.exists()) {
             audio.mkdirs();
         }
 
-        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+        date_postRequest(url);
+        while(date_now_gotfromrequest == null);
+
+        System.out.println("the date we got");
+        System.out.println(date_now_gotfromrequest);
+        // string in date_now_gotfromrequest
+
+
+        System.out.println(date_now_gotfromrequest.length());
+
+        String date_now_filename = date_now_gotfromrequest.substring(0,19);
+
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
+//        Date now = new Date();
+
+        System.out.println(date_now_gotfromrequest);
+
+        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + date_now_filename + ".3gp";
         //the file name
-        outputFile_timeinfo = "audio_time_info" + formatter.format(now) + ".txt";
+        outputFile_timeinfo = "audio_time_info" + date_now_filename + ".txt";
         //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
-        thefilename = formatter.format(now) + ".3gp";
+        thefilename = date_now_filename + ".3gp";
 
         try {
-            File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Audio_time_info");
-            if (!root.exists()) {
-                root.mkdirs();
-            }
             File filepath = new File(root, outputFile_timeinfo);
             info_path = filepath.getPath();
             time_imformation = new FileWriter(filepath);
-
             //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
         //outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/" + formatter.format(now) + ".3gp";
         //outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
@@ -285,18 +303,28 @@ public class Audio_recorder extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
 
-        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+
+
+//        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+//        //the file name
+//        outputFile_timeinfo = "audio_time_info" + formatter.format(now) + ".txt";
+//        //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
+//        thefilename = formatter.format(now) + ".3gp";
+
+//        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+
 
         try {
-            Date now_start = new Date();
-            see_time_start.setText(formatter_start.format(now_start));
+//            Date now_start = new Date();
+            see_time_start.setText(date_now_gotfromrequest);
 
             try {
                 //time_imformation.append(sBody);
-                time_imformation.write(formatter_start.format(now_start)+"\n");
+                time_imformation.write(date_now_gotfromrequest + "\n");
                 time_imformation.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -317,19 +345,28 @@ public class Audio_recorder extends AppCompatActivity {
 
         if(myAudioRecorder != null) {
             timer.stop();
-            SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+//            SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
             try {
+
                 myAudioRecorder.stop();
-                Date now_end = new Date();
-                see_time_end.setText(formatter_end.format(now_end));
+
+
+//                Date now_end = new Date();
+
+                date_now_gotfromrequest = null;
+                date_postRequest(url);
+                // date in date_now_gotfromrequest
+                while(date_now_gotfromrequest == null) ;
+
+//                see_time_end.setText(formatter_end.format(now_end));
+                see_time_end.setText(date_now_gotfromrequest);
 
                 try {
-                    time_imformation.write(formatter_end.format(now_end) + "\n");
+//                    time_imformation.write(formatter_end.format(now_end) + "\n");
+                    time_imformation.write(date_now_gotfromrequest + "\n");
                     time_imformation.flush();
                     time_imformation.close();
 
-
-                    
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -338,21 +375,22 @@ public class Audio_recorder extends AppCompatActivity {
                 // handle cleanup here
                 e.printStackTrace();
             }
-            //myAudioRecorder.reset();
+
+            myAudioRecorder.reset();
             myAudioRecorder.release();
             myAudioRecorder = null;
+
             textView4.setText("stop! SAVE IN " + outputFile);
 
             key_for_uploadbt = 1;
         }
     }
 
+
+
     private void postRequest(String URL, String audio_file_path, String audio_filename,String audio_info_path, String info_filename) {
 
-        OkHttpClient okHttpClient = new OkHttpClient();
-
-
-
+       OkHttpClient okHttpClient = new OkHttpClient();
 
         File f = new File(audio_file_path);
         File info = new File(audio_info_path);
@@ -406,29 +444,43 @@ public class Audio_recorder extends AppCompatActivity {
         });
     }
 
-    private void downloadComposed(String url , String roomnum){
+    private void date_postRequest(String URL){
 
-        File root = new File(getExternalFilesDir("/").getAbsolutePath(), "Download");
-                if (!root.exists()) {
-                    root.mkdirs();
-                }
-        //File mdownload = new File(root, "Masterpice.mp4");
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//            .connectTimeout(100,TimeUnit.MICROSECONDS)
+//            .writeTimeout(100,TimeUnit.MICROSECONDS)
+//            .readTimeout(100,TimeUnit.MICROSECONDS).build();
 
-        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        Download_Uri = Uri.parse(url + "Download" + roomnum);
-        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        //request.setAllowedOverRoaming(false);
-        request.setTitle("Download Result");
-        request.setDescription("Downloading your masterpice");
-        request.setVisibleInDownloadsUi(true);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES,"Download.mp4");
+        OkHttpClient okHttpClient = new OkHttpClient();
 
-        //String mediaType = getMimeType(audio_file_path);
-        request.setMimeType("*/*");
-        downloadManager.enqueue(request);
+        String date_obtain_url = URL + "timesynchronize";
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("date_request", "date_request_audiorecorder")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(date_obtain_url)
+                .post(formBody)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                date_now_gotfromrequest = response.body().string();
+//                System.out.println(date_now_gotfromrequest);
+            }
+        });
+
 
     }
+
+
 
     private String getMimeType(String path){
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);

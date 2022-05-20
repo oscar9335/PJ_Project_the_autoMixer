@@ -47,6 +47,14 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -75,6 +83,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     //private ProcessCameraProvider mCameraProvider;
 
     private String roomnumber;
+
+    private String date_now_gotfromrequest = null;
+
+    private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
 
 
@@ -135,6 +147,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 //        CameraSelector cameraSelector = new CameraSelector.Builder()
 //                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
 //                .build();
+
         cameraProvider.unbindAll();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -144,7 +157,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 
         Preview preview = new Preview.Builder()
-//                .setTargetResolution(new Size(1280, 720))
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
@@ -152,17 +164,15 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         videoCapture = new VideoCapture.Builder()
                 .setCameraSelector(cameraSelector)
                 .setTargetResolution(new Size(1280, 720))
-//                .setIFrameInterval(10)  //what is this
                 .setBitRate(5000000)
                 .setVideoFrameRate(30)
                 .build();
 
 
-//        cameraProvider.unbindAll();
+
         //bind to lifecycle:
         cameraProvider.bindToLifecycle(this, cameraSelector, preview,videoCapture);
 
-//        checkPermission();
     }
 
     @SuppressLint("RestrictedApi")
@@ -179,10 +189,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     bRecord.setText("START");
                     videoCapture.stopRecording();
 
-                    Date time2 = new Date();
-                    SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+//                    Date time2 = new Date();
+//                    SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+
+                    date_now_gotfromrequest = null;
+                    date_postRequest(url);
+                    while(date_now_gotfromrequest == null);
+
                     try {
-                        time_imformation.write(formatter_end.format(time2) + "\n");
+//                        time_imformation.write(formatter_end.format(time2) + "\n");
+                        time_imformation.write(date_now_gotfromrequest + "\n");
                         time_imformation.flush();
                         time_imformation.close();
                     } catch (IOException e) {
@@ -227,17 +243,25 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 root.mkdirs();
             }
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
-            Date now = new Date();
-            File file = new File( getExternalFilesDir("Video").getAbsolutePath() + "/" + formatter.format(now) + ".mp4");
+            //file name
+            // format yyyy_MM_dd_hh_mm_ss
+
+            date_postRequest(url);
+            while(date_now_gotfromrequest == null);
+            String date_now_filename = date_now_gotfromrequest.substring(0,19);
+
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
+//            Date now = new Date();
+
+//            File file = new File( getExternalFilesDir("Video").getAbsolutePath() + "/" + formatter.format(now) + ".mp4");
 
 
 //            outputFile = file.getPath();
 
-            video_name = formatter.format(now) + ".mp4";
-            String videovideoname = formatter.format(now);
+            video_name = date_now_filename + ".mp4";
+            String videovideoname = date_now_filename;
 
-            outputFile_timeinfo = "video_time_info" + formatter.format(now) + ".txt";
+            outputFile_timeinfo = "video_time_info" + date_now_filename + ".txt";
 
             try {
                 File filepath = new File(root, outputFile_timeinfo);
@@ -255,10 +279,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             try {
                 for_time = new between_video();
-                Date time = new Date();
-                SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+
+//                Date time = new Date();
+//                SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+
                 try {
-                    time_imformation.write(formatter_start.format(time)+"\n");
+                    time_imformation.write(date_now_gotfromrequest + "\n");
                     time_imformation.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -267,9 +293,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 e.printStackTrace();
             }
 
-
-//            long timestamp = System.currentTimeMillis();
-            ContentValues contentValues = new ContentValues();
+            final ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, videovideoname);
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");    // this is significant WTF
 
@@ -289,7 +313,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             videoCapture.startRecording(
-//                outputFileOptions,
                     new VideoCapture.OutputFileOptions.Builder(
                             getContentResolver(),
                             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -310,6 +333,42 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             );
 
         }
+    }
+
+    private void date_postRequest(String URL){
+
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//            .connectTimeout(100,TimeUnit.MICROSECONDS)
+//            .writeTimeout(100,TimeUnit.MICROSECONDS)
+//            .readTimeout(100,TimeUnit.MICROSECONDS).build();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        String date_obtain_url = URL + "timesynchronize";
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("date_request", "date_request_camera")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(date_obtain_url)
+                .post(formBody)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                date_now_gotfromrequest = response.body().string();
+//                System.out.println(date_now_gotfromrequest);
+            }
+        });
+
+
     }
 
 
