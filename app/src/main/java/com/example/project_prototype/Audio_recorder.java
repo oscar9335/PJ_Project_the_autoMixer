@@ -179,39 +179,44 @@ public class Audio_recorder extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.recorder_button:
                     if(isRecording){
+                        //                Date now_end = new Date();
 
-                        stopRecording();
-                        isRecording = false;
+                        date_now_gotfromrequest = null;
+                        date_postRequest(url);
+                        // date in date_now_gotfromrequest
+
+                        int toresendrequest = 0;
+                        while(date_now_gotfromrequest == null){
+
+                            if(toresendrequest > 5000){
+                                date_postRequest(url);
+                            }
+                            System.out.println("IN WHILE");
+                            toresendrequest++;
+                        }
+
+                        System.out.println(toresendrequest);
+
+                        if(date_now_gotfromrequest != null){
+                            see_time_end.setText(date_now_gotfromrequest);
+
+                            try {
+                                time_imformation.write(date_now_gotfromrequest + "\n");
+                                time_imformation.flush();
+                                time_imformation.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            stopRecording();
+                            isRecording = false;
+                        }
                     }
                     else{
                         record();
                         isRecording = true;
                     }
                     break;
-//                case R.id.for8k2:
-//                    if(isRecording == false) {
-//                        //can change the frame rate
-//                        samplerate = 8000; //default
-//                        samplerate_show = "8000\n";
-//                        textView4.setText("Select 8KHZ");
-//                    }
-//                    break;
-//                case R.id.for16k2:
-//                    if(isRecording == false) {
-//                        //can change the frame rate
-//                        samplerate = 16000; //default
-//                        samplerate_show = "16000\n";
-//                        textView4.setText("Select 16KHZ");
-//                    }
-//                    break;
-//                case R.id.for44_1k2:
-//                    if(isRecording == false) {
-//                        //can change the frame rate
-//                        samplerate = 44100; //default
-//                        samplerate_show = "44100\n";
-//                        textView4.setText("Select 44.1KHZ");
-//                    }
-//                    break;
 
                 case R.id.uploadAudio_bt:
                     if(key_for_uploadbt == 1) {
@@ -240,104 +245,117 @@ public class Audio_recorder extends AppCompatActivity {
         }
 
         date_postRequest(url);
-        while(date_now_gotfromrequest == null);
 
-        System.out.println("the date we got");
-        System.out.println(date_now_gotfromrequest);
-        // string in date_now_gotfromrequest
+        int toresendrequest = 0;
+        while(date_now_gotfromrequest == null){
 
-
-        System.out.println(date_now_gotfromrequest.length());
-
-        String date_now_filename = date_now_gotfromrequest.substring(0,19);
-
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
-//        Date now = new Date();
-
-        System.out.println(date_now_gotfromrequest);
-
-        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + date_now_filename + ".3gp";
-        //the file name
-        outputFile_timeinfo = "audio_time_info" + date_now_filename + ".txt";
-        //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
-        thefilename = date_now_filename + ".3gp";
-
-        try {
-            File filepath = new File(root, outputFile_timeinfo);
-            info_path = filepath.getPath();
-            time_imformation = new FileWriter(filepath);
-            //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
+            if(toresendrequest > 5000){
+                date_postRequest(url);
+            }
+            System.out.println("IN WHILE");
+            toresendrequest++;
         }
 
+        System.out.println(toresendrequest);
+
+        if(date_now_gotfromrequest != null) {
+
+            System.out.println("the date we got");
+            System.out.println(date_now_gotfromrequest);
+            // string in date_now_gotfromrequest
 
 
-        //outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/" + formatter.format(now) + ".3gp";
-        //outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+            System.out.println(date_now_gotfromrequest.length());
 
-        myAudioRecorder = new MediaRecorder();
-        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        myAudioRecorder.setOutputFile(outputFile);
-        //Toast.makeText(context, outputFile, Toast.LENGTH_SHORT).show();
+            String date_now_filename = date_now_gotfromrequest.substring(0, 19);
 
-        if(samplerate == 16000){
-            myAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            myAudioRecorder.setAudioSamplingRate(samplerate);
-        }
-        else if(samplerate == 44100){
-            myAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            myAudioRecorder.setAudioEncodingBitRate(384000);
-            myAudioRecorder.setAudioSamplingRate(samplerate);
-        }
-        else{
-            myAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            myAudioRecorder.setAudioSamplingRate(8000);
+            //        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
+            //        Date now = new Date();
 
-        }
+            System.out.println(date_now_gotfromrequest);
 
-        try {
-            myAudioRecorder.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        timer.setBase(SystemClock.elapsedRealtime());
-        timer.start();
-
-
-
-//        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
-//        //the file name
-//        outputFile_timeinfo = "audio_time_info" + formatter.format(now) + ".txt";
-//        //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
-//        thefilename = formatter.format(now) + ".3gp";
-
-//        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
-
-
-        try {
-//            Date now_start = new Date();
-            see_time_start.setText(date_now_gotfromrequest);
+            outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + date_now_filename + ".3gp";
+            //the file name
+            outputFile_timeinfo = "audio_time_info" + date_now_filename + ".txt";
+            //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
+            thefilename = date_now_filename + ".3gp";
 
             try {
-                //time_imformation.append(sBody);
-                time_imformation.write(date_now_gotfromrequest + "\n");
-                time_imformation.flush();
+                File filepath = new File(root, outputFile_timeinfo);
+                info_path = filepath.getPath();
+                time_imformation = new FileWriter(filepath);
+                //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            myAudioRecorder.start();
 
-        } catch(IllegalStateException e){
-            e.printStackTrace();
+            //outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/" + formatter.format(now) + ".3gp";
+            //outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+
+            myAudioRecorder = new MediaRecorder();
+            myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            myAudioRecorder.setOutputFile(outputFile);
+            //Toast.makeText(context, outputFile, Toast.LENGTH_SHORT).show();
+
+            if (samplerate == 16000) {
+                myAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                myAudioRecorder.setAudioSamplingRate(samplerate);
+            } else if (samplerate == 44100) {
+                myAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                myAudioRecorder.setAudioEncodingBitRate(384000);
+                myAudioRecorder.setAudioSamplingRate(samplerate);
+            } else {
+                myAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                myAudioRecorder.setAudioSamplingRate(8000);
+
+            }
+
+            try {
+                myAudioRecorder.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            timer.setBase(SystemClock.elapsedRealtime());
+            timer.start();
+
+
+            //        outputFile = getExternalFilesDir("/Audio").getAbsolutePath() + "/" + formatter.format(now) + ".3gp";
+            //        //the file name
+            //        outputFile_timeinfo = "audio_time_info" + formatter.format(now) + ".txt";
+            //        //outputFile_timeinfo = getExternalFilesDir("/").getAbsolutePath() + "/" + formatter.format(now) + ".txt";
+            //        thefilename = formatter.format(now) + ".3gp";
+
+            //        SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
+
+
+            try {
+                //            Date now_start = new Date();
+                see_time_start.setText(date_now_gotfromrequest);
+
+                try {
+                    //time_imformation.append(sBody);
+                    time_imformation.write(date_now_gotfromrequest + "\n");
+                    time_imformation.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                myAudioRecorder.start();
+
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+
+            isRecording = true;
+            textView4.setText(samplerate_show + "recording");
         }
-
-        isRecording = true;
-        textView4.setText(samplerate_show + "recording");
+        else {
+            System.out.println("null date!!!");
+        }
     }
 
     private void stopRecording() {
@@ -350,26 +368,6 @@ public class Audio_recorder extends AppCompatActivity {
 
                 myAudioRecorder.stop();
 
-
-//                Date now_end = new Date();
-
-                date_now_gotfromrequest = null;
-                date_postRequest(url);
-                // date in date_now_gotfromrequest
-                while(date_now_gotfromrequest == null) ;
-
-//                see_time_end.setText(formatter_end.format(now_end));
-                see_time_end.setText(date_now_gotfromrequest);
-
-                try {
-//                    time_imformation.write(formatter_end.format(now_end) + "\n");
-                    time_imformation.write(date_now_gotfromrequest + "\n");
-                    time_imformation.flush();
-                    time_imformation.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
             } catch (IllegalStateException e) {
                 // handle cleanup here
@@ -451,6 +449,7 @@ public class Audio_recorder extends AppCompatActivity {
 //            .writeTimeout(100,TimeUnit.MICROSECONDS)
 //            .readTimeout(100,TimeUnit.MICROSECONDS).build();
 
+
         OkHttpClient okHttpClient = new OkHttpClient();
 
         String date_obtain_url = URL + "timesynchronize";
@@ -467,17 +466,19 @@ public class Audio_recorder extends AppCompatActivity {
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+//                date_now_gotfromrequest = "TTTTTTTTTTTTTTTTTTTT";
+                System.out.println("Failed response resend request");
+//                date_postRequest(URL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                System.out.println("Success response");
                 date_now_gotfromrequest = response.body().string();
-//                System.out.println(date_now_gotfromrequest);
+                System.out.println(date_now_gotfromrequest);
             }
         });
-
-
     }
 
 

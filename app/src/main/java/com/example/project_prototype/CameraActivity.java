@@ -194,36 +194,47 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                     date_now_gotfromrequest = null;
                     date_postRequest(url);
-                    while(date_now_gotfromrequest == null);
+                    int toresendrequest = 0;
+                    while(date_now_gotfromrequest == null){
 
-                    try {
-//                        time_imformation.write(formatter_end.format(time2) + "\n");
-                        time_imformation.write(date_now_gotfromrequest + "\n");
-                        time_imformation.flush();
-                        time_imformation.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if(toresendrequest > 6000){
+                            date_postRequest(url);
+                        }
+//                        System.out.println("IN WHILE");
+                        toresendrequest++;
                     }
+                    System.out.println("TIMES IN WHILE");
+                    System.out.println(toresendrequest);
 
-                    //this place ##important##
-                    //send the video_file_name & video_info_name to the front fragment and let the fragment do the upload file job
-                    Bundle bundle = new Bundle();
-                    bundle.putString("video_path",outputFile);
-                    bundle.putString("video_name",video_name);
-                    bundle.putString("video_info_path",video_info_path);
-                    bundle.putString("video_info_name",outputFile_timeinfo);
-                    bundle.putString("the_room_number",roomnumber);
+                    if(date_now_gotfromrequest != null){
+                        try {
+//                        time_imformation.write(formatter_end.format(time2) + "\n");
+                            time_imformation.write(date_now_gotfromrequest + "\n");
+                            time_imformation.flush();
+                            time_imformation.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                    between_video fragment_object = new between_video();
-                    fragment_object.setArguments(bundle);
+                        //this place ##important##
+                        //send the video_file_name & video_info_name to the front fragment and let the fragment do the upload file job
+                        Bundle bundle = new Bundle();
+                        bundle.putString("video_path",outputFile);
+                        bundle.putString("video_name",video_name);
+                        bundle.putString("video_info_path",video_info_path);
+                        bundle.putString("video_info_name",outputFile_timeinfo);
+                        bundle.putString("the_room_number",roomnumber);
+
+                        between_video fragment_object = new between_video();
+                        fragment_object.setArguments(bundle);
 
 //                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,fragment_object).commit();
-                    bRecord.setVisibility(View.GONE);
-                    previewView.setVisibility(View.GONE);
-
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,fragment_object).commit();
+                        bRecord.setVisibility(View.GONE);
+                        previewView.setVisibility(View.GONE);
+                    }
                 }
                 break;
         }
@@ -247,8 +258,20 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             // format yyyy_MM_dd_hh_mm_ss
 
             date_postRequest(url);
-            while(date_now_gotfromrequest == null);
-            String date_now_filename = date_now_gotfromrequest.substring(0,19);
+
+            int toresendrequest = 0;
+            while(date_now_gotfromrequest == null){
+                if(toresendrequest > 6000){
+                    date_postRequest(url);
+                }
+//                System.out.println("IN WHILE");
+                toresendrequest++;
+            }
+            System.out.println("TIMES IN WHILE");
+            System.out.println(toresendrequest);
+
+            if(date_now_gotfromrequest != null){
+                String date_now_filename = date_now_gotfromrequest.substring(0,19);
 
 //            SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
 //            Date now = new Date();
@@ -258,80 +281,80 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 //            outputFile = file.getPath();
 
-            video_name = date_now_filename + ".mp4";
-            String videovideoname = date_now_filename;
+                video_name = date_now_filename + ".mp4";
+                String videovideoname = date_now_filename;
 
-            outputFile_timeinfo = "video_time_info" + date_now_filename + ".txt";
+                outputFile_timeinfo = "video_time_info" + date_now_filename + ".txt";
 
-            try {
-                File filepath = new File(root, outputFile_timeinfo);
-                video_info_path = filepath.getPath();
-                time_imformation = new FileWriter(filepath);
+                try {
+                    File filepath = new File(root, outputFile_timeinfo);
+                    video_info_path = filepath.getPath();
+                    time_imformation = new FileWriter(filepath);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 //            VideoCapture.Metadata metadata = new VideoCapture.Metadata();
 //            VideoCapture.OutputFileOptions outputFileOptions = new VideoCapture.OutputFileOptions.Builder(file).setMetadata(metadata).build();
 
 
 
-            try {
-                for_time = new between_video();
+                try {
+                    for_time = new between_video();
 
 //                Date time = new Date();
 //                SimpleDateFormat formatter_start = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
 
-                try {
-                    time_imformation.write(date_now_gotfromrequest + "\n");
-                    time_imformation.flush();
-                } catch (IOException e) {
+                    try {
+                        time_imformation.write(date_now_gotfromrequest + "\n");
+                        time_imformation.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            final ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, videovideoname);
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");    // this is significant WTF
+                final ContentValues contentValues = new ContentValues();
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, videovideoname);
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");    // this is significant WTF
 
-            outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath() + "/" + videovideoname + ".mp4";
-            System.out.println(outputFile);
+                outputFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath() + "/" + videovideoname + ".mp4";
+                System.out.println(outputFile);
 
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-
-            videoCapture.startRecording(
-                    new VideoCapture.OutputFileOptions.Builder(
-                            getContentResolver(),
-                            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                            contentValues
-                    ).build(),
-                ContextCompat.getMainExecutor(this),
-                new VideoCapture.OnVideoSavedCallback() {
-                    @Override
-                    public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
-                        Toast.makeText(CameraActivity.this, outputFile, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
-                        Toast.makeText(CameraActivity.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
-                    }
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
                 }
-            );
 
+                videoCapture.startRecording(
+                        new VideoCapture.OutputFileOptions.Builder(
+                                getContentResolver(),
+                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                contentValues
+                        ).build(),
+                        ContextCompat.getMainExecutor(this),
+                        new VideoCapture.OnVideoSavedCallback() {
+                            @Override
+                            public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
+                                Toast.makeText(CameraActivity.this, outputFile, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
+                                Toast.makeText(CameraActivity.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+            }
         }
     }
 
@@ -358,6 +381,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+//                date_now_gotfromrequest = "TTTTTTTTTTTTTTTTTTTT";
                 call.cancel();
             }
 
