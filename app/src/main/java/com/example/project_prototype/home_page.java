@@ -249,10 +249,17 @@ public class home_page extends Fragment implements View.OnClickListener{
                         }
                     });
 
-                    downloadmessage.setText(statusMessage(cursor));
+                    final String leave;
+                    leave = statusMessage(cursor);
+                    downloadmessage.setText(leave);
+                    if(leave.equals("Download complete!"))
+                        downloading = false;
 //                    Log.d(Constants.MAIN_VIEW_ACTIVITY, statusMessage(cursor));
                     cursor.close();
+
                 }
+
+                return;
 
             }
         }).start();

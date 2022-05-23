@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -194,7 +195,11 @@ public class between_video extends Fragment implements View.OnClickListener{
 
 
     private void onCompose(String URL, String room_number){
-        OkHttpClient okHttpClient = new OkHttpClient();
+//        OkHttpClient okHttpClient = new OkHttpClient();
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .readTimeout(180, TimeUnit.MINUTES).build();
+
         RequestBody formBody = new FormBody.Builder()
                 .add("compose_file", "compose")
                 .add("room_number", room_number)
