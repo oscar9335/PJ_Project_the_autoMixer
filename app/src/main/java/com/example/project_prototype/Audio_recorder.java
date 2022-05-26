@@ -130,11 +130,15 @@ public class Audio_recorder extends AppCompatActivity {
 
         recorder_button = (ImageButton) findViewById(R.id.recorder_button);
         textView4 = (TextView) findViewById(R.id.textView4);
+//        textView4.setVisibility(View.INVISIBLE);
 
         audio_upload_txt = (TextView) findViewById(R.id.audio_upload_txt);
 
         see_time_start = (TextView) findViewById(R.id.see_time_start);
         see_time_end = (TextView) findViewById(R.id.see_time_end);
+
+        see_time_start.setVisibility(View.INVISIBLE);
+        see_time_end.setVisibility(View.INVISIBLE);
 
         timer = (Chronometer) findViewById(R.id.record_timer2);
 //        for8K = (Button) findViewById((R.id.for8k2)) ;
@@ -378,7 +382,7 @@ public class Audio_recorder extends AppCompatActivity {
             myAudioRecorder.release();
             myAudioRecorder = null;
 
-            textView4.setText("stop! SAVE IN " + outputFile);
+            textView4.setText("Audio saved!");
 
             key_for_uploadbt = 1;
         }

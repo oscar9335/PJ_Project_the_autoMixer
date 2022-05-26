@@ -116,6 +116,7 @@ public class home_page extends Fragment implements View.OnClickListener{
 
         roomcontainer = view.findViewById(R.id.roomcontainer);
         settingcontainer = view.findViewById(R.id.homepage_settinginfo);
+        settingcontainer.setVisibility(View.INVISIBLE);
 
         dwprogressbar = view.findViewById(R.id.dwprogressBar);
         downloadmessage = view.findViewById(R.id.downloadmessage);

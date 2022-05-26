@@ -97,6 +97,7 @@ public class between_video extends Fragment implements View.OnClickListener{
 
         upload_status = view.findViewById(R.id.file_upload_status);
         file_name = view.findViewById(R.id.video_file_name);
+        file_name.setVisibility(View.INVISIBLE);
 
 
         file_name.setText(video_path);

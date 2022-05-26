@@ -9,31 +9,32 @@
 
     <ImageButton
         android:id="@+id/video_mode"
-        android:layout_width="128dp"
-        android:layout_height="116dp"
+        android:layout_width="130dp"
+        android:layout_height="115dp"
 
         android:layout_marginEnd="40dp"
 
         android:adjustViewBounds="true"
-        android:background="@color/white"
+        android:background="#8a8a8a"
         android:scaleType="fitXY"
 
-        android:src="@android:drawable/presence_video_busy"
+        android:src="@drawable/video_use"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.863" />
 
     <ImageButton
+
         android:id="@+id/audio_mode"
-        android:layout_width="129dp"
+        android:layout_width="130dp"
         android:layout_height="115dp"
 
         android:adjustViewBounds="true"
-        android:background="@color/white"
+        android:background="#8a8a8a"
         android:scaleType="fitXY"
 
-        android:src="@android:drawable/presence_audio_busy"
+        android:src="@drawable/audio_foruse"
         app:layout_constraintBottom_toBottomOf="@+id/video_mode"
         app:layout_constraintEnd_toStartOf="@+id/video_mode"
         app:layout_constraintHorizontal_bias="0.487"
@@ -42,24 +43,27 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
+        android:textColor="@color/white"
+        android:background="#8a8a8a"
         android:id="@+id/textView"
-        android:layout_width="125dp"
-        android:layout_height="68dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="130dp"
+        android:layout_height="70dp"
         android:text="Audio Recoder"
         android:textAlignment="center"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/audio_mode"
         app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintHorizontal_bias="0.419"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView2"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
+        android:textColor="@color/white"
+        android:background="#8a8a8a"
         android:id="@+id/textView2"
-        android:layout_width="125dp"
-        android:layout_height="68dp"
+        android:layout_width="130dp"
+        android:layout_height="70dp"
         android:layout_marginEnd="40dp"
         android:text="Video Recoder"
         android:textAlignment="center"
@@ -69,11 +73,11 @@
 
 
     <Button
+        android:textColor="@color/white"
+        android:background="#8a8a8a"
         android:id="@+id/downloadbt"
         android:layout_width="350dp"
         android:layout_height="75dp"
-        android:background="@android:color/holo_green_light"
-
         android:text="Download your masterpice"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
