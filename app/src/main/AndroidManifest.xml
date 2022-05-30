@@ -26,7 +26,7 @@
         <activity
             android:name=".CameraActivity"
             android:exported="true"
-            android:screenOrientation="landscape"/>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".Audio_recorder"
             android:exported="true" />

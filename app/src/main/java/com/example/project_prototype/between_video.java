@@ -113,7 +113,7 @@ public class between_video extends Fragment implements View.OnClickListener{
         composebt.setOnClickListener(this);
         composebt.setVisibility(View.GONE);
 
-        this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
 

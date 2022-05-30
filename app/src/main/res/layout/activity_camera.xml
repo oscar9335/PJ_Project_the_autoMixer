@@ -23,6 +23,15 @@
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintVertical_bias="0.5" />
 
+  <ImageButton
+      android:id="@+id/imageButtonrotate"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:layout_marginRight="20dp"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/bRecord"
+      android:background="@android:drawable/ic_menu_rotate" />
 
 
   <FrameLayout
@@ -46,7 +55,11 @@
         android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="100"></androidx.camera.view.PreviewView>
+        android:layout_weight="100">
+
+
+
+    </androidx.camera.view.PreviewView>
   </LinearLayout>
 
 

@@ -24,15 +24,18 @@ import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Size;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,6 +91,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     private String url = "http://" + "140.116.82.135" + ":" + 5000 + "/";
 
+    private ImageButton imageButtonrotate;
+    private int nowdirectrion;
+    private TextView debugcamerax;
+
 
 
     @Override
@@ -106,6 +113,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         bRecord = findViewById(R.id.bRecord);
         bRecord.setOnClickListener(this);
 
+        imageButtonrotate = findViewById(R.id.imageButtonrotate);
+        imageButtonrotate.setOnClickListener(this);
+        imageButtonrotate.bringToFront();
+
+//        debugcamerax = findViewById(R.id.debugcamerax);
+//        debugcamerax.setText("Portrait");
+//        debugcamerax.bringToFront();
+
+        nowdirectrion = 0;
+
+
         checkPermission();
 
         //receive data from hoom_fragment using SafeArg
@@ -116,7 +134,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                startCameraX(cameraProvider);
+                startCameraX(cameraProvider,Surface.ROTATION_0);
 
             } catch (ExecutionException | InterruptedException e) {
 
@@ -125,8 +143,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }, ContextCompat.getMainExecutor(this));
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
 
     }
@@ -135,9 +153,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 //        return ContextCompat.getMainExecutor(this);
 //    }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        String s = "";
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            s = "Landscape orientation";
+        }
+        else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            s = "Portrait orientation";
+        }
+    }
+
 
     @SuppressLint("RestrictedApi")
-    private void startCameraX(ProcessCameraProvider cameraProvider) {
+    private void startCameraX(ProcessCameraProvider cameraProvider,int aa) {
 
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
@@ -157,11 +188,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 
         Preview preview = new Preview.Builder()
+                .setTargetRotation(aa)
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
 
         videoCapture = new VideoCapture.Builder()
+                .setTargetRotation(aa)
                 .setCameraSelector(cameraSelector)
                 .setTargetResolution(new Size(1280, 720))
                 .setBitRate(5000000)
@@ -184,13 +217,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     recording = true;
                     bRecord.setText("STOP");
                     recordVideo();
-                } else {//recording == true
+                }
+                else {//recording == true
                     recording = false;
                     bRecord.setText("START");
                     videoCapture.stopRecording();
-
-//                    Date time2 = new Date();
-//                    SimpleDateFormat formatter_end = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss_SSS", Locale.TAIWAN);
 
                     date_now_gotfromrequest = null;
                     date_postRequest(url);
@@ -234,8 +265,54 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,fragment_object).commit();
                         bRecord.setVisibility(View.GONE);
                         previewView.setVisibility(View.GONE);
+                        imageButtonrotate.setVisibility(View.GONE);
+
                     }
                 }
+                break;
+            case R.id.imageButtonrotate:
+
+                if(nowdirectrion == 0){
+                    // 0 for portrait 1 for landscape
+                    nowdirectrion = 1;
+
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+//                    debugcamerax.setText("Landscape");
+
+                    cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+                    cameraProviderFuture.addListener(() -> {
+                        try {
+                            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                            startCameraX(cameraProvider,Surface.ROTATION_90);
+
+                        } catch (ExecutionException | InterruptedException e) {
+
+                            e.printStackTrace();
+                        }
+                    }, ContextCompat.getMainExecutor(this));
+
+                }
+                else if(nowdirectrion == 1){
+                    nowdirectrion = 0;
+
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+//                    debugcamerax.setText("Portrait");
+
+                    cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+                    cameraProviderFuture.addListener(() -> {
+                        try {
+                            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                            startCameraX(cameraProvider,Surface.ROTATION_0);
+
+                        } catch (ExecutionException | InterruptedException e) {
+
+                            e.printStackTrace();
+                        }
+                    }, ContextCompat.getMainExecutor(this));
+                }
+
                 break;
         }
     }
@@ -271,7 +348,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             System.out.println(toresendrequest);
 
             if(date_now_gotfromrequest != null){
-                String date_now_filename = date_now_gotfromrequest.substring(0,19);
+//                String date_now_filename = date_now_gotfromrequest.substring(0,19);
+                String date_now_filename = date_now_gotfromrequest;
 
 //            SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
 //            Date now = new Date();

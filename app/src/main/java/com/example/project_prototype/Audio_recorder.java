@@ -271,7 +271,8 @@ public class Audio_recorder extends AppCompatActivity {
 
             System.out.println(date_now_gotfromrequest.length());
 
-            String date_now_filename = date_now_gotfromrequest.substring(0, 19);
+//            String date_now_filename = date_now_gotfromrequest.substring(0, 19);
+            String date_now_filename = date_now_gotfromrequest;
 
             //        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.TAIWAN);
             //        Date now = new Date();
